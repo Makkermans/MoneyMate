@@ -18,9 +18,10 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
-
+import model.Acount;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.event.ActionEvent;
 
 /**
  * FXML Controller class
@@ -29,8 +30,6 @@ import java.util.ResourceBundle;
  * Modified carferl2
  */
 public class HelloController implements Initializable {
-    @FXML
-    private TextField userField;
 
     @FXML
     private PasswordField passwordField;
@@ -40,6 +39,10 @@ public class HelloController implements Initializable {
 
     @FXML
     private Label register;
+    @FXML
+    private TextField nameField;
+    @FXML
+    private Label incorrect;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -47,10 +50,45 @@ public class HelloController implements Initializable {
 
     }
 
-    public void registerButtonPressed(MouseEvent event) throws Exception{
-        FXMLLoader fxmlloader= new FXMLLoader(getClass().getResource("/com/example/expenseapplication/views/Register-view.fxml"));
-        Parent root = fxmlloader.load();
-        MoneyMateApplication.setRoot(root);
-
+    @FXML
+    public void registerButtonPressed(MouseEvent event) {
+        try {
+            // Load the registration view
+            FXMLLoader fxmlloader= new FXMLLoader(getClass().getResource("/view/Register-view.fxml"));
+            Parent root = fxmlloader.load();
+            MoneyMateApplication.setRoot(root);
+        } catch (Exception e) {
+            e.printStackTrace(); // Log the exception for debugging purposes.
+            // Consider displaying an error message to the user or logging the error more formally.
+        }
     }
+
+
+    
+    @FXML
+    private void loginClicked(ActionEvent event) {
+        String username = nameField.getText();
+        String password = passwordField.getText();
+
+        try {
+            boolean loginSuccessful = Acount.getInstance().logInUserByCredentials(username, password);
+            if (loginSuccessful) {
+                // Load the main application dashboard or home screen
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/Dashboard-view.fxml"));
+                Parent root = fxmlLoader.load();
+                Scene scene = new Scene(root);
+                Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                stage.setScene(scene);
+                stage.show();
+            } else {
+                // Display an error message on the UI
+                incorrect.setText("Login failed: Incorrect username or password. Try again.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Handle other exceptions such as network issues, configuration errors, etc.
+            incorrect.setText("Login failed: Unable to connect. Please try again later.");
+        }
+    }
+
 }
