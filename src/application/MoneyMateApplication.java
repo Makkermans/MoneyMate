@@ -50,11 +50,11 @@ public class MoneyMateApplication extends Application {
         Parent root;
         FXMLLoader fxmlloader;
         // Start Screen
-        fxmlloader = new FXMLLoader(getClass().getResource("views/hello-view.fxml"));
+        fxmlloader = new FXMLLoader(getClass().getResource("view/hello-view.fxml"));
         root = fxmlloader.load();
         roots.put("HelloController", root);
         // Register Screen
-        fxmlloader = new FXMLLoader(getClass().getResource("views/Register-view.fxml"));
+        fxmlloader = new FXMLLoader(getClass().getResource("view/Register-view.fxml"));
         root = fxmlloader.load();
         roots.put("RegisterScreenController", root);
 
