@@ -121,7 +121,7 @@
                               <Insets right="35.0" />
                            </GridPane.margin>
                         </Label>
-                        <BarChart title="Monthly Expense" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="2">
+                        <BarChart title="Monthly Expense" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="2">
                           <xAxis>
                             <CategoryAxis side="BOTTOM" />
                           </xAxis>
