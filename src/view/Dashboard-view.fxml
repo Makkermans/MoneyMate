@@ -31,7 +31,7 @@
               <menus>
                 <Menu mnemonicParsing="false" text="Log Out">
                   <items>
-                    <MenuItem mnemonicParsing="false" text="Sign Off" />
+                    <MenuItem fx:id="SignOff" mnemonicParsing="false" onAction="#SignOffClicked" text="Sign Off" />
                   </items>
                 </Menu>
               </menus>
