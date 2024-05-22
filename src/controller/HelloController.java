@@ -74,12 +74,9 @@ public class HelloController implements Initializable {
             boolean loginSuccessful = Acount.getInstance().logInUserByCredentials(username, password);
             if (loginSuccessful) {
                 // Load the main application dashboard or home screen
-                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/Dashboard-view.fxml"));
-                Parent root = fxmlLoader.load();
-                Scene scene = new Scene(root);
-                Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                stage.setScene(scene);
-                stage.show();
+                FXMLLoader fxmlloader= new FXMLLoader(getClass().getResource("/view/Dashboard-view.fxml"));
+                Parent root = fxmlloader.load();
+                MoneyMateApplication.setRoot(root);
             } else {
                 // Display an error message on the UI
                 incorrect.setText("Login failed: Incorrect username or password. Try again.");
