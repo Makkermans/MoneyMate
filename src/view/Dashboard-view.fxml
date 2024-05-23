@@ -23,7 +23,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="543.0" prefWidth="738.0" stylesheets="@../Style/GeneralStyle.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.DashboardController">
+<AnchorPane prefHeight="543.0" prefWidth="738.0" stylesheets="@../Style/GeneralStyle.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.DashboardController">
    <children>
       <BorderPane layoutX="315.0" layoutY="146.0" prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <top>
@@ -67,17 +67,17 @@
                               <Insets left="20.0" />
                            </GridPane.margin>
                         </Text>
-                        <Label text="See All &gt;" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
+                        <Label fx:id="allExpenses" onDragDetected="#allExpensesClicked" text="See All &gt;" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
                            <cursor>
                               <Cursor fx:constant="HAND" />
                            </cursor>
                         </Label>
-                        <TableView prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="2" GridPane.rowIndex="2">
+                        <TableView fx:id="expenseTable" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="2" GridPane.rowIndex="2">
                           <columns>
-                            <TableColumn prefWidth="75.0" text="Name" />
-                            <TableColumn prefWidth="130.0" text="Date" />
-                              <TableColumn prefWidth="75.0" text="Category" />
-                              <TableColumn prefWidth="75.0" text="Amount" />
+                            <TableColumn fx:id="nameColumn" prefWidth="75.0" text="Name" />
+                            <TableColumn fx:id="dateColumn" prefWidth="130.0" text="Date" />
+                              <TableColumn fx:id="categoryColumn" prefWidth="75.0" text="Category" />
+                              <TableColumn fx:id="amountColumn" prefWidth="75.0" text="Amount" />
                           </columns>
                            <GridPane.margin>
                               <Insets left="20.0" />
@@ -86,12 +86,12 @@
                               <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                            </columnResizePolicy>
                         </TableView>
-                        <Button mnemonicParsing="false" prefHeight="31.0" prefWidth="143.0" text="Add Expense" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
+                        <Button fx:id="addExpense" mnemonicParsing="false" onAction="#addExpenseClicked" prefHeight="31.0" prefWidth="143.0" text="Add Expense" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
                            <cursor>
                               <Cursor fx:constant="HAND" />
                            </cursor>
                         </Button>
-                        <ImageView fitHeight="82.0" fitWidth="87.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" GridPane.halignment="RIGHT">
+                        <ImageView fx:id="profilePicture" fitHeight="82.0" fitWidth="87.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" GridPane.halignment="RIGHT">
                            <image>
                               <Image url="@../Pictures/Standard_Profile_Picture.png" />
                            </image>
@@ -99,9 +99,9 @@
                               <Insets right="20.0" />
                            </GridPane.margin>
                         </ImageView>
-                        <ImageView fitHeight="26.0" fitWidth="52.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.valignment="BOTTOM">
+                        <ImageView fx:id="changeUser" fitHeight="26.0" fitWidth="52.0" onMouseClicked="#changeUserPressed" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.valignment="BOTTOM">
                            <image>
-                              <Image url="@../../../Pictures/Edit_Pencil.png" />
+                              <Image url="@../Pictures/Edit_Pencil.png" />
                            </image>
                            <GridPane.margin>
                               <Insets left="60.0" right="20.0" />
@@ -113,7 +113,7 @@
                               <Cursor fx:constant="HAND" />
                            </cursor>
                         </ImageView>
-                        <Label text="Big D" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="TOP">
+                        <Label fx:id="nameDashboard" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="TOP">
                            <font>
                               <Font name="System Bold" size="18.0" />
                            </font>
@@ -121,7 +121,7 @@
                               <Insets right="40.0" />
                            </GridPane.margin>
                         </Label>
-                        <BarChart title="Monthly Expense" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+                        <BarChart fx:id="expenseChart" title="Monthly Expense" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
                           <xAxis>
                             <CategoryAxis side="BOTTOM" />
                           </xAxis>
@@ -133,7 +133,7 @@
                            </GridPane.margin>
                         </BarChart>
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Monthly Expense: " GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
-                        <Label text="\$$$" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.rowIndex="3">
+                        <Label fx:id="monthlyExpense" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.rowIndex="3">
                            <GridPane.margin>
                               <Insets left="20.0" />
                            </GridPane.margin>
