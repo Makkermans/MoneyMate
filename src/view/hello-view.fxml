@@ -15,7 +15,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: lightgreen;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.HelloController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: lightgreen;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.HelloController">
    <top>
       <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
@@ -50,6 +50,7 @@
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="10.0" vgrow="SOMETIMES" />
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -74,7 +75,7 @@
                   </Label>
                   <TextField fx:id="nameField" promptText="Username" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                   <PasswordField fx:id="passwordField" promptText="Password" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                  <Button fx:id="LoginButton" mnemonicParsing="false" prefHeight="31.0" prefWidth="112.0" text="Log In" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3">
+                  <Button fx:id="LoginButton" mnemonicParsing="false" onAction="#loginClicked" prefHeight="31.0" prefWidth="112.0" text="Log In" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="4">
                      <font>
                         <Font name="Comic Sans MS" size="16.0" />
                      </font>
@@ -82,13 +83,13 @@
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </Button>
-                  <Label alignment="CENTER" prefHeight="21.0" prefWidth="204.0" text="or" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                  <Label text="New User? " GridPane.columnIndex="1" GridPane.rowIndex="5">
+                  <Label alignment="CENTER" prefHeight="21.0" prefWidth="204.0" text="or" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                  <Label text="New User? " GridPane.columnIndex="1" GridPane.rowIndex="6">
                      <font>
                         <Font name="Comic Sans MS" size="16.0" />
                      </font>
                   </Label>
-                  <Label fx:id="register" alignment="CENTER" contentDisplay="RIGHT" onMouseClicked="#registerButtonPressed" prefHeight="21.0" prefWidth="109.0" text="Create Account" textAlignment="RIGHT" textFill="#0800f5" underline="true" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="5">
+                  <Label fx:id="register" alignment="CENTER" contentDisplay="RIGHT" onMouseClicked="#registerButtonPressed" prefHeight="21.0" prefWidth="109.0" text="Create Account" textAlignment="RIGHT" textFill="#0800f5" underline="true" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="6">
                      <font>
                         <Font name="Comic Sans MS" size="14.0" />
                      </font>
@@ -96,6 +97,7 @@
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </Label>
+                  <Label fx:id="incorrect" textFill="#fc0a0a" GridPane.columnSpan="3" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER" />
                </children>
             </GridPane>
          </children>
