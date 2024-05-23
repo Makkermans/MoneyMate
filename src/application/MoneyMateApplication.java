@@ -50,17 +50,14 @@ public class MoneyMateApplication extends Application {
         Parent root;
         FXMLLoader fxmlloader;
         // Start Screen
-        fxmlloader = new FXMLLoader(getClass().getResource("view/hello-view.fxml"));
+        fxmlloader = new FXMLLoader(getClass().getResource("/view/hello-view.fxml"));
         root = fxmlloader.load();
         roots.put("HelloController", root);
-        // Register Screen
-        fxmlloader = new FXMLLoader(getClass().getResource("view/Register-view.fxml"));
-        root = fxmlloader.load();
-        roots.put("RegisterScreenController", root);
+        
 
         scene = new Scene(roots.get("HelloController"));
         stage.setScene(scene);
-        stage.setResizable(false);
+        stage.setResizable(true);
         stage.setTitle("MoneyMate - Your Financial Companion");
         stage.setHeight(400);
         stage.setWidth(600);
