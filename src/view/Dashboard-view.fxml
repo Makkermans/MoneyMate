@@ -49,8 +49,8 @@
                     </columnConstraints>
                     <rowConstraints>
                       <RowConstraints maxHeight="163.0" minHeight="10.0" prefHeight="84.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="318.0" minHeight="10.0" prefHeight="26.0" vgrow="SOMETIMES" />
-                      <RowConstraints maxHeight="373.0" minHeight="10.0" prefHeight="312.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="318.0" minHeight="10.0" prefHeight="28.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="373.0" minHeight="10.0" prefHeight="328.0" vgrow="SOMETIMES" />
                       <RowConstraints maxHeight="92.0" minHeight="10.0" prefHeight="61.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
@@ -118,10 +118,10 @@
                               <Font name="System Bold" size="18.0" />
                            </font>
                            <GridPane.margin>
-                              <Insets right="35.0" />
+                              <Insets right="40.0" />
                            </GridPane.margin>
                         </Label>
-                        <BarChart title="Monthly Expense" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="2">
+                        <BarChart title="Monthly Expense" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
                           <xAxis>
                             <CategoryAxis side="BOTTOM" />
                           </xAxis>
@@ -129,7 +129,7 @@
                             <NumberAxis side="LEFT" />
                           </yAxis>
                            <GridPane.margin>
-                              <Insets left="10.0" right="10.0" />
+                              <Insets left="10.0" />
                            </GridPane.margin>
                         </BarChart>
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Monthly Expense: " GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
