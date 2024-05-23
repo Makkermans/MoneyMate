@@ -7,26 +7,35 @@ package controller;
 import application.MoneyMateApplication;
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.chart.BarChart;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import model.Acount;
 import model.AcountDAOException;
 import model.User;
+import model.Charge;
 
 /**
  * FXML Controller class
@@ -40,21 +49,21 @@ public class DashboardController implements Initializable {
     @FXML
     private Label allExpenses;
     @FXML
-    private TableView<?> expenseTable;
+    private TableView<Charge> expenseTable;
     @FXML
-    private TableColumn<?, ?> nameColumn;
+    private TableColumn<Charge, String> nameColumn;
     @FXML
-    private TableColumn<?, ?> dateColumn;
+    private TableColumn<Charge, LocalDate> dateColumn;
     @FXML
-    private TableColumn<?, ?> categoryColumn;
+    private TableColumn<Charge, String> categoryColumn;
     @FXML
-    private TableColumn<?, ?> amountColumn;
+    private TableColumn<Charge, Double> amountColumn;
     @FXML
     private Button addExpense;
     @FXML
     private ImageView changeUser;
     @FXML
-    private BarChart<?, ?> expenseChart;
+    private BarChart<String, Number> expenseChart;
     @FXML
     private Label monthlyExpense;
     @FXML
@@ -63,11 +72,19 @@ public class DashboardController implements Initializable {
     private Label nameDashboard;
 
     private String username;
+    
+    private ObservableList<Charge> chargeData = FXCollections.observableArrayList();
+
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        // Set up the cell value factories for the table columns
+        nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        dateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
+        categoryColumn.setCellValueFactory(new PropertyValueFactory<>("category")); // Assuming there's a getCategoryName method in Charge
+        amountColumn.setCellValueFactory(new PropertyValueFactory<>("cost"));
         try{
         User currentUser = Acount.getInstance().getLoggedUser();
         if (currentUser != null) {
@@ -76,12 +93,56 @@ public class DashboardController implements Initializable {
             if (currentUser.getImage() != null) {
                 profilePicture.setImage(currentUser.getImage());
             }
+            loadData();
+            setupChart();
+            updateMonthlyExpenses(); 
         }
         }       catch (AcountDAOException | IOException ex) {
         Logger.getLogger(editUserController.class.getName()).log(Level.SEVERE, null, ex); 
         }
     }    
+    private void updateMonthlyExpenses() {
+    LocalDate now = LocalDate.now(); // Get the current date
+    double total = chargeData.stream()
+        .filter(charge -> charge.getDate().getMonth() == now.getMonth() && charge.getDate().getYear() == now.getYear())
+        .mapToDouble(Charge::getCost)
+        .sum(); // Calculate the sum of costs for the current month
 
+    monthlyExpense.setText(String.format("€%.2f", total)); // Update the label
+}
+
+
+    private void loadData() throws IOException {
+    try {
+        List<Charge> charges = Acount.getInstance().getUserCharges(); // Using the getUserCharges method
+        if (charges != null) {
+            chargeData.setAll(charges);
+        } else {
+            chargeData.clear();
+        }
+        expenseTable.setItems(chargeData);
+    } catch (AcountDAOException e) {
+        e.printStackTrace(); // Log the exception
+        // You might want to show an error message to the user
+    }
+}
+
+
+    private void setupChart() {
+        XYChart.Series<String, Number> series = new XYChart.Series<>();
+        Map<String, Double> summary = chargeData.stream()
+        .collect(Collectors.groupingBy(
+        charge -> charge.getCategory().toString(),
+        Collectors.summingDouble(Charge::getCost)));
+
+        series.getData().clear(); // Clear previous data points if necessary
+        summary.forEach((category, sum) -> series.getData().add(new XYChart.Data<>(category, sum)));
+
+        expenseChart.getData().clear(); // Clear previous series if necessary
+        expenseChart.getData().add(series);
+
+    }
+    
     @FXML
     private void SignOffClicked(ActionEvent event) throws Exception{
         try {

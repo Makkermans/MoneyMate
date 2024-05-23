@@ -20,8 +20,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@../Style/GeneralStyle.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@../Style/GeneralStyle.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.AddExpenseController">
    <top>
       <MenuBar BorderPane.alignment="CENTER">
         <menus>
@@ -65,39 +64,39 @@
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Title/Name: " GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Amount: " GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Description: " GridPane.halignment="RIGHT" GridPane.rowIndex="3" GridPane.valignment="TOP" />
-            <TextField promptText="Gass" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <TextField promptText="\$$$" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-            <TextArea prefHeight="89.0" prefWidth="160.0" promptText="Description about expense" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-            <ImageView fitHeight="70.0" fitWidth="84.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="4" GridPane.halignment="CENTER">
+            <TextField fx:id="expenseTitle" promptText="Gass" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <TextField fx:id="expenseAmount" promptText="\$$$" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <TextArea fx:id="expenseDescription" prefHeight="89.0" prefWidth="160.0" promptText="Description about expense" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <ImageView fx:id="profilePicture" fitHeight="70.0" fitWidth="84.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="4" GridPane.halignment="CENTER">
                <image>
                   <Image url="@../Pictures/Standard_Profile_Picture.png" />
                </image>
             </ImageView>
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Category: " GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
-            <ChoiceBox prefWidth="150.0" GridPane.columnIndex="3" GridPane.rowIndex="2">
+            <ChoiceBox fx:id="chooseCategory" prefWidth="150.0" GridPane.columnIndex="3" GridPane.rowIndex="2">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
             </ChoiceBox>
-            <DatePicker promptText="dd/mm/jjjj" GridPane.columnIndex="3" GridPane.rowIndex="1">
+            <DatePicker fx:id="datapicker" onAction="#pickDatepressed" promptText="dd/mm/jjjj" GridPane.columnIndex="3" GridPane.rowIndex="1">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
             </DatePicker>
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Date: " GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
-            <Button mnemonicParsing="false" prefHeight="32.0" prefWidth="36.0" text="+" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="2">
+            <Button fx:id="addCategory" mnemonicParsing="false" onAction="#addCategoryPressed" prefHeight="32.0" prefWidth="36.0" text="+" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="2">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Receipt: " GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="3" GridPane.valignment="TOP" />
-            <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Add File" GridPane.columnIndex="3" GridPane.rowIndex="3" GridPane.valignment="TOP" />
-            <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Save" GridPane.columnIndex="3" GridPane.rowIndex="4">
+            <Button fx:id="addFile" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#addFilePressed" text="Add File" GridPane.columnIndex="3" GridPane.rowIndex="3" GridPane.valignment="TOP" />
+            <Button fx:id="saveButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#saveButtonPressed" text="Save" GridPane.columnIndex="3" GridPane.rowIndex="4">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <Label maxWidth="1.7976931348623157E308" prefHeight="59.0" prefWidth="140.0" text="ErrorMessage Space" GridPane.columnIndex="3" GridPane.rowIndex="3" GridPane.valignment="BOTTOM" />
+            <Label fx:id="errorMessage" maxWidth="1.7976931348623157E308" prefHeight="59.0" prefWidth="140.0" GridPane.columnIndex="3" GridPane.rowIndex="3" GridPane.valignment="BOTTOM" />
          </children>
       </GridPane>
    </center>
