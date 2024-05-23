@@ -26,6 +26,8 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
 import model.Persona;
 import model.User;
@@ -70,12 +72,20 @@ public class RegisterController implements Initializable {
     private Label wrongEmail;
     @FXML
     private Label wrongPassword;
+    @FXML
+    private Circle circle;
 
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        // Default Image
+        Image defaultImage = new Image("/Pictures/default.jpg");
+        circle.setFill(new ImagePattern(defaultImage));
+        
+        
+        // Button Bindings
         confirmButton.disableProperty().bind(
         nameField.textProperty().isEmpty()
         .or(surnameField.textProperty().isEmpty())
@@ -210,7 +220,8 @@ private boolean validateData(String nickname, String password, String email) {
             try {
                 String imagePath = file.toURI().toURL().toString();
                 Image image = new Image(imagePath);
-                profilePicture.setImage(image); // Set the image in ImageView
+                //profilePicture.setImage(image); // Set the image in ImageView
+                circle.setFill(new ImagePattern(image));
             } catch (MalformedURLException ex) {
                 System.err.println("Error loading image: "+ ex.getMessage());
                 // Handle exceptions possibly with a dialog

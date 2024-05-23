@@ -13,7 +13,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.MenuItem;
-import javafx.scene.image.ImageView;
+import javafx.scene.image.Image;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 
 /**
@@ -21,18 +22,20 @@ import javafx.scene.shape.Circle;
  *
  * @author thoma
  */
-public class DashboardController implements Initializable {
+public class OverviewExpenseController implements Initializable {
 
     @FXML
     private MenuItem SignOff;
     @FXML
-    private Circle circleImage;
+    private Circle circle;
 
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        Image img = new Image("/Pictures/Standard_Profile_Picture.png");
+        circle.setFill(new ImagePattern(img));
         // TODO
     }    
 

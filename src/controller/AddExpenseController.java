@@ -6,7 +6,9 @@ package controller;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.TextField;
 
 /**
  * FXML Controller class
@@ -14,6 +16,9 @@ import javafx.fxml.Initializable;
  * @author thoma
  */
 public class AddExpenseController implements Initializable {
+
+    @FXML
+    private TextField nameExpense;
 
     /**
      * Initializes the controller class.
