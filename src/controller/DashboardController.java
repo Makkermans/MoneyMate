@@ -4,10 +4,15 @@
  */
 package controller;
 
+import application.MoneyMateApplication;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.control.MenuItem;
 import javafx.scene.image.ImageView;
 
 /**
@@ -18,7 +23,7 @@ import javafx.scene.image.ImageView;
 public class DashboardController implements Initializable {
 
     @FXML
-    private ImageView profilePicture;
+    private MenuItem SignOff;
 
     /**
      * Initializes the controller class.
@@ -27,5 +32,12 @@ public class DashboardController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
     }    
+
+    @FXML
+    private void SignOffClicked(ActionEvent event) throws Exception{
+        FXMLLoader fxmlloader= new FXMLLoader(getClass().getResource("view/hello-view.fxml"));
+        Parent root = fxmlloader.load();
+        MoneyMateApplication.setRoot(root);
+    }
     
 }
