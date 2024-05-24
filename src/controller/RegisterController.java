@@ -8,6 +8,7 @@ package controller;
 import application.MoneyMateApplication;
 import com.sun.javafx.logging.PlatformLogger.Level;
 import java.io.File;
+import java.io.IOException;
 import java.lang.System.Logger;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -32,6 +33,7 @@ import javafx.stage.FileChooser;
 import model.Persona;
 import model.User;
 import model.Acount;
+import model.AcountDAOException;
 
 /**
  * FXML Controller class
@@ -53,8 +55,8 @@ public class RegisterController implements Initializable {
     @FXML
     private PasswordField passwordField;
 
-    @FXML
-    private ImageView profilePicture;
+    
+    private Image profilePicture;
 
     @FXML
     private Button editPictureButton;
@@ -81,8 +83,8 @@ public class RegisterController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // Default Image
-        Image defaultImage = new Image("/Pictures/default.jpg");
-        circle.setFill(new ImagePattern(defaultImage));
+        profilePicture = new Image("/Pictures/default.jpg");
+        circle.setFill(new ImagePattern(profilePicture));
         
         
         // Button Bindings
@@ -119,7 +121,7 @@ private void applyClicked(ActionEvent event) {
         String username = userField.getText();
         String password = passwordField.getText();
         String email = emailField.getText();
-        Image image = profilePicture.getImage();
+        //Image image = profilePicture.getImage();
 
         // Validate data
         if (!validateData(username, password, email)) {
@@ -127,7 +129,7 @@ private void applyClicked(ActionEvent event) {
             return;
         }
         
-        boolean saveSuccess = Acount.getInstance().registerUser(name, surname, email, username, password, image, LocalDate.now());
+        boolean saveSuccess = Acount.getInstance().registerUser(name, surname, email, username, password, profilePicture, LocalDate.now());
 
 
         if (saveSuccess) {
@@ -165,8 +167,9 @@ private void navigateToLoginScreen() {
 }
 
 
-private boolean validateData(String nickname, String password, String email) {
+private boolean validateData(String nickname, String password, String email) throws AcountDAOException, IOException {
     boolean isValid = true;
+    User user = Acount.getInstance().getLoggedUser();
     // Validate password length
     if (!User.checkPassword(password)) {
         String errorPassword = "Password needs at least: \n"+
@@ -187,9 +190,9 @@ private boolean validateData(String nickname, String password, String email) {
     else {
         wrongEmail.setText("");
     }
-
+//|| !User.checkNickName(nickname)
     // Check if the nickname already exists in the database
-    if (!User.checkNickName(nickname)) {
+    if (user.checkNickName(nickname)  ) {
         String errorNickname = "Nickname already taken \n" +
                                 "Please choose another.";
         wrongNickname.setText(errorNickname);
@@ -225,9 +228,9 @@ private boolean validateData(String nickname, String password, String email) {
         if (file != null) {
             try {
                 String imagePath = file.toURI().toURL().toString();
-                Image image = new Image(imagePath);
+                profilePicture = new Image(imagePath);
                 //profilePicture.setImage(image); // Set the image in ImageView
-                circle.setFill(new ImagePattern(image));
+                circle.setFill(new ImagePattern(profilePicture));
             } catch (MalformedURLException ex) {
                 System.err.println("Error loading image: "+ ex.getMessage());
                 // Handle exceptions possibly with a dialog
