@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/javafx/FXMLController.java to edit this template
- */
 package controller;
 
 import application.MoneyMateApplication;
@@ -24,6 +20,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.chart.BarChart;
+import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -32,7 +29,6 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.ImagePattern;
@@ -42,11 +38,6 @@ import model.AcountDAOException;
 import model.User;
 import model.Charge;
 
-/**
- * FXML Controller class
- *
- * @author thoma
- */
 public class DashboardController implements Initializable {
 
     @FXML
@@ -72,8 +63,6 @@ public class DashboardController implements Initializable {
     @FXML
     private Label monthlyExpense;
     @FXML
-    private ImageView profilePicture;
-    @FXML
     private Label nameDashboard;
 
     private String username;
@@ -88,133 +77,193 @@ public class DashboardController implements Initializable {
     @FXML
     private Button deleteExpense;
 
-    /**
-     * Initializes the controller class.
-     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // Initialize ComboBox to choose different filter for the Graph
         filterList = selectFilter.getItems();
         filterList.addAll("Category", "Monthly", "Year-by-Year");
         
-        // Set up the cell value factories for the table columns
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         dateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
-        categoryColumn.setCellValueFactory(new PropertyValueFactory<>("category")); // Assuming there's a getCategoryName method in Charge
+        categoryColumn.setCellValueFactory(new PropertyValueFactory<>("category"));
         amountColumn.setCellValueFactory(new PropertyValueFactory<>("cost"));
-        try{
-        User currentUser = Acount.getInstance().getLoggedUser();
-        if (currentUser != null) {
-            this.username = currentUser.getNickName();
-            nameDashboard.setText(this.username); // Set the username in the TextField
-            if (currentUser.getImage() != null) {
-                //profilePicture.setImage(currentUser.getImage());
-                circleImage.setFill(new ImagePattern(currentUser.getImage()));
+
+        try {
+            User currentUser = Acount.getInstance().getLoggedUser();
+            if (currentUser != null) {
+                this.username = currentUser.getNickName();
+                nameDashboard.setText(this.username);
+                if (currentUser.getImage() != null) {
+                    circleImage.setFill(new ImagePattern(currentUser.getImage()));
+                }
+                loadData();
+                setupChart("Category");
+                updateMonthlyExpenses(); 
             }
-            loadData();
-            setupChart("Category");
-            updateMonthlyExpenses(); 
-        }
-        }       catch (AcountDAOException | IOException ex) {
-        Logger.getLogger(editUserController.class.getName()).log(Level.SEVERE, null, ex); 
+        } catch (AcountDAOException | IOException ex) {
+            Logger.getLogger(editUserController.class.getName()).log(Level.SEVERE, null, ex); 
         }
         
-        selectFilter.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->{
+        selectFilter.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             setupChart(newValue);
         });
+
+        expenseChart.getStylesheets().add(getClass().getResource("/style/GeneralStyleDashboard.css").toExternalForm());
+
+        NumberAxis yAxis = (NumberAxis) expenseChart.getYAxis();
+        yAxis.setLabel("Amount");
     }    
+
     private void updateMonthlyExpenses() {
-    LocalDate now = LocalDate.now(); // Get the current date
-    double total = chargeData.stream()
-        .filter(charge -> charge.getDate().getMonth() == now.getMonth() && charge.getDate().getYear() == now.getYear())
-        .mapToDouble(Charge::getCost)
-        .sum(); // Calculate the sum of costs for the current month
-
-    monthlyExpense.setText(String.format("€%.2f", total)); // Update the label
-}
-
+        LocalDate now = LocalDate.now();
+        double total = chargeData.stream()
+            .filter(charge -> charge.getDate().getMonth() == now.getMonth() && charge.getDate().getYear() == now.getYear())
+            .mapToDouble(Charge::getCost)
+            .sum();
+        monthlyExpense.setText(String.format("€%.2f", total));
+    }
 
     private void loadData() throws IOException {
-    try {
-        List<Charge> charges = Acount.getInstance().getUserCharges(); // Using the getUserCharges method
-        if (charges != null) {
-            chargeData.setAll(charges);
-        } else {
-            chargeData.clear();
+        try {
+            List<Charge> charges = Acount.getInstance().getUserCharges();
+            if (charges != null) {
+                chargeData.setAll(charges);
+            } else {
+                chargeData.clear();
+            }
+            expenseTable.setItems(chargeData);
+        } catch (AcountDAOException e) {
+            e.printStackTrace();
         }
-        expenseTable.setItems(chargeData);
-    } catch (AcountDAOException e) {
-        e.printStackTrace(); // Log the exception
-        // You might want to show an error message to the user
     }
+
+    private void setupChart(String filter) {
+        expenseChart.getData().clear();
+
+        if (filter.equals("Category")) {
+            setupCategoryChart();
+        } else if (filter.equals("Monthly")) {
+            setupMonthlyChart();
+        } else if (filter.equals("Year-by-Year")) {
+            setupYearByYearChart();
+        }
+
+        // Ensure the x-axis is properly updated
+        expenseChart.layout();
+    }
+
+    private void setupCategoryChart() {
+    System.out.println("Setting up category chart");
+
+    // Clear existing data
+    expenseChart.getData().clear();
+    System.out.println("Cleared existing data from the chart");
+
+    XYChart.Series<String, Number> series = new XYChart.Series<>();
+    System.out.println("Series created");
+
+    Map<String, Double> summary = chargeData.stream()
+        .collect(Collectors.groupingBy(
+            charge -> charge.getCategory().toString(),
+            Collectors.summingDouble(Charge::getCost)));
+    System.out.println("Summary computed: " + summary);
+
+    summary.forEach((category, sum) -> {
+        System.out.println("Adding data to series: Category = " + category + ", Sum = " + sum);
+        series.getData().add(new XYChart.Data<>(category, sum));
+    });
+
+    series.setName("Expenses by Category");
+    expenseChart.getData().add(series);
+    System.out.println("Series added to chart");
 }
 
 
-    private void setupChart(String filter) {
+
+    private void setupMonthlyChart() {
         XYChart.Series<String, Number> series = new XYChart.Series<>();
-        if (filter == "Category"){
-            Map<String, Double> summary = chargeData.stream()
+        Map<Month, Double> summary = chargeData.stream()
             .collect(Collectors.groupingBy(
-            charge -> charge.getCategory().toString(),
-            Collectors.summingDouble(Charge::getCost)));
+                charge -> charge.getDate().getMonth(),
+                TreeMap::new,
+                Collectors.summingDouble(Charge::getCost)));
 
-            series.getData().clear(); // Clear previous data points if necessary
-            summary.forEach((category, sum) -> series.getData().add(new XYChart.Data<>(category, sum)));
-        } else if(filter == "Monthly"){
-            
-        };
+        summary.forEach((month, sum) -> series.getData().add(new XYChart.Data<>(month.toString(), sum)));
 
-        expenseChart.getData().clear(); // Clear previous series if necessary
+        series.setName("Monthly Expenses");
         expenseChart.getData().add(series);
     }
-    
-    @FXML
-    private void SignOffClicked(ActionEvent event) throws Exception{
-        try {
-        FXMLLoader fxmlloader = new FXMLLoader(getClass().getResource("/view/hello-view.fxml"));
-        Parent root = fxmlloader.load();
-        MoneyMateApplication.setRoot(root);
-    } catch (Exception e) {
-        e.printStackTrace(); // Log the exception for debugging purposes.
-        // Consider displaying an error message to the user or logging the error more formally.
+
+    private void setupYearByYearChart() {
+        XYChart.Series<String, Number> seriesLastYear = new XYChart.Series<>();
+        XYChart.Series<String, Number> seriesThisYear = new XYChart.Series<>();
+        LocalDate now = LocalDate.now();
+        int currentYear = now.getYear();
+        int previousYear = currentYear - 1;
+
+        Map<Month, Double> lastYearSummary = chargeData.stream()
+            .filter(charge -> charge.getDate().getYear() == previousYear)
+            .collect(Collectors.groupingBy(
+                charge -> charge.getDate().getMonth(),
+                TreeMap::new,
+                Collectors.summingDouble(Charge::getCost)));
+
+        Map<Month, Double> thisYearSummary = chargeData.stream()
+            .filter(charge -> charge.getDate().getYear() == currentYear)
+            .collect(Collectors.groupingBy(
+                charge -> charge.getDate().getMonth(),
+                TreeMap::new,
+                Collectors.summingDouble(Charge::getCost)));
+
+        lastYearSummary.forEach((month, sum) -> seriesLastYear.getData().add(new XYChart.Data<>(month.toString(), sum)));
+        thisYearSummary.forEach((month, sum) -> seriesThisYear.getData().add(new XYChart.Data<>(month.toString(), sum)));
+
+        seriesLastYear.setName(String.valueOf(previousYear));
+        seriesThisYear.setName(String.valueOf(currentYear));
+
+        expenseChart.getData().addAll(seriesLastYear, seriesThisYear);
     }
+
+    @FXML
+    private void SignOffClicked(ActionEvent event) throws Exception {
+        try {
+            FXMLLoader fxmlloader = new FXMLLoader(getClass().getResource("/view/hello-view.fxml"));
+            Parent root = fxmlloader.load();
+            MoneyMateApplication.setRoot(root);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
     private void allExpensesClicked(MouseEvent event) {
         try {
-        FXMLLoader fxmlloader = new FXMLLoader(getClass().getResource("/view/OverviewExpense-view.fxml"));
-        Parent root = fxmlloader.load();
-        MoneyMateApplication.setRoot(root);
-    } catch (Exception e) {
-        e.printStackTrace(); // Log the exception for debugging purposes.
-        // Consider displaying an error message to the user or logging the error more formally.
-    }
+            FXMLLoader fxmlloader = new FXMLLoader(getClass().getResource("/view/OverviewExpense-view.fxml"));
+            Parent root = fxmlloader.load();
+            MoneyMateApplication.setRoot(root);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
     private void addExpenseClicked(ActionEvent event) {
         try {
-        FXMLLoader fxmlloader = new FXMLLoader(getClass().getResource("/view/AddExpense-view.fxml"));
-        Parent root = fxmlloader.load();
-        MoneyMateApplication.setRoot(root);
-    } catch (Exception e) {
-        e.printStackTrace(); // Log the exception for debugging purposes.
-        // Consider displaying an error message to the user or logging the error more formally.
-    }
-    
+            FXMLLoader fxmlloader = new FXMLLoader(getClass().getResource("/view/AddExpense-view.fxml"));
+            Parent root = fxmlloader.load();
+            MoneyMateApplication.setRoot(root);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
     private void changeUserPressed(MouseEvent event) {
         try {
-        FXMLLoader fxmlloader = new FXMLLoader(getClass().getResource("/view/editUser-view.fxml"));
-        Parent root = fxmlloader.load();
-        MoneyMateApplication.setRoot(root);
-    } catch (Exception e) {
-        e.printStackTrace(); // Log the exception for debugging purposes.
-        // Consider displaying an error message to the user or logging the error more formally.
+            FXMLLoader fxmlloader = new FXMLLoader(getClass().getResource("/view/editUser-view.fxml"));
+            Parent root = fxmlloader.load();
+            MoneyMateApplication.setRoot(root);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
-    }
-    
 }
