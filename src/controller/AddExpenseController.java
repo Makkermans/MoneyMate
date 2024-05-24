@@ -29,6 +29,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import model.Acount;
 import model.AcountDAOException;
@@ -69,6 +71,10 @@ public class AddExpenseController implements Initializable {
     private Button removeCatgory;
     @FXML
     private Button cancelButton;
+    @FXML
+    private Text name;
+    
+    private String username;
 
     /**
      * Initializes the controller class.
@@ -79,10 +85,15 @@ public class AddExpenseController implements Initializable {
             expenseTitle.textProperty().isEmpty()
             .or(expenseAmount.textProperty().isEmpty())
         );
-        try {
+       try {
             User currentUser = Acount.getInstance().getLoggedUser();
-            if (currentUser.getImage() != null) {
-                profilePicture.setImage(currentUser.getImage());  
+            if (currentUser != null) {
+                this.username = currentUser.getNickName();
+                name.setText(this.username);
+                if (currentUser.getImage() != null) {
+                    //circleImage.setFill(new ImagePattern(currentUser.getImage()));
+                }
+                
             }
         } catch (AcountDAOException | IOException ex) {
             Logger.getLogger(editUserController.class.getName()).log(Level.SEVERE, null, ex); 
@@ -173,10 +184,11 @@ public class AddExpenseController implements Initializable {
             String description = expenseDescription.getText();
             Category category = chooseCategory.getValue();
             Image image = profilePicture.getImage();
+            Integer unit = Integer.parseInt(expenseUnit.getText());
             LocalDate date = datapicker.getValue();   // This could also come from a DatePicker
 
             
-            boolean saveSuccess = Acount.getInstance().registerCharge(title, description, amount, 1, image, date, category);  // This method needs to be implemented
+            boolean saveSuccess = Acount.getInstance().registerCharge(title, description, amount, unit, image, date, category);  // This method needs to be implemented
 
             if (saveSuccess) {
                 
