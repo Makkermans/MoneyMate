@@ -126,8 +126,9 @@ private void applyClicked(ActionEvent event) {
             System.out.println("Invalid input. Please check your data and try again.");
             return;
         }
-
+        
         boolean saveSuccess = Acount.getInstance().registerUser(name, surname, email, username, password, image, LocalDate.now());
+
 
         if (saveSuccess) {
             // Show success alert
@@ -165,10 +166,14 @@ private void navigateToLoginScreen() {
 
 
 private boolean validateData(String nickname, String password, String email) {
+    boolean isValid = true;
     // Validate password length
     if (!User.checkPassword(password)) {
-        wrongPassword.setText("Password must be at least 6 characters long.");
-        return false;
+        String errorPassword = "Password needs at least: \n"+
+                              "8-20 characters, 1 special character,\n"+
+                              "1 uppercase, 1 lowercase, and 1 number.";
+        wrongPassword.setText(errorPassword);
+        isValid = false;
     }
     else {
         wrongPassword.setText("");
@@ -177,7 +182,7 @@ private boolean validateData(String nickname, String password, String email) {
     // Validate email format
     if (!User.checkEmail(email)) {
         wrongEmail.setText("Enter a valid email address.");
-        return false;
+        isValid = false;
     }
     else {
         wrongEmail.setText("");
@@ -185,14 +190,15 @@ private boolean validateData(String nickname, String password, String email) {
 
     // Check if the nickname already exists in the database
     if (!User.checkNickName(nickname)) {
-        wrongNickname.setText("Nickname already taken, please choose another.");
-        return false;
+        String errorNickname = "Nickname already taken \n" +
+                                "Please choose another.";
+        wrongNickname.setText(errorNickname);
+        isValid = false;
     }
     else {
         wrongNickname.setText("");
     }
-
-    return true;
+    return isValid;
 }
 
 
