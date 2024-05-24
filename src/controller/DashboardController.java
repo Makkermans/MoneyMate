@@ -8,9 +8,11 @@ import application.MoneyMateApplication;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.Month;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -24,6 +26,7 @@ import javafx.scene.Parent;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
@@ -78,12 +81,22 @@ public class DashboardController implements Initializable {
     private ObservableList<Charge> chargeData = FXCollections.observableArrayList();
     @FXML
     private Circle circleImage;
+    @FXML
+    private ComboBox<String> selectFilter;
+    
+    private ObservableList<String> filterList;
+    @FXML
+    private Button deleteExpense;
 
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        // Initialize ComboBox to choose different filter for the Graph
+        filterList = selectFilter.getItems();
+        filterList.addAll("Category", "Monthly", "Year-by-Year");
+        
         // Set up the cell value factories for the table columns
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         dateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
@@ -99,12 +112,16 @@ public class DashboardController implements Initializable {
                 circleImage.setFill(new ImagePattern(currentUser.getImage()));
             }
             loadData();
-            setupChart();
+            setupChart("Category");
             updateMonthlyExpenses(); 
         }
         }       catch (AcountDAOException | IOException ex) {
         Logger.getLogger(editUserController.class.getName()).log(Level.SEVERE, null, ex); 
         }
+        
+        selectFilter.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->{
+            setupChart(newValue);
+        });
     }    
     private void updateMonthlyExpenses() {
     LocalDate now = LocalDate.now(); // Get the current date
@@ -133,19 +150,22 @@ public class DashboardController implements Initializable {
 }
 
 
-    private void setupChart() {
+    private void setupChart(String filter) {
         XYChart.Series<String, Number> series = new XYChart.Series<>();
-        Map<String, Double> summary = chargeData.stream()
-        .collect(Collectors.groupingBy(
-        charge -> charge.getCategory().toString(),
-        Collectors.summingDouble(Charge::getCost)));
+        if (filter == "Category"){
+            Map<String, Double> summary = chargeData.stream()
+            .collect(Collectors.groupingBy(
+            charge -> charge.getCategory().toString(),
+            Collectors.summingDouble(Charge::getCost)));
 
-        series.getData().clear(); // Clear previous data points if necessary
-        summary.forEach((category, sum) -> series.getData().add(new XYChart.Data<>(category, sum)));
+            series.getData().clear(); // Clear previous data points if necessary
+            summary.forEach((category, sum) -> series.getData().add(new XYChart.Data<>(category, sum)));
+        } else if(filter == "Monthly"){
+            
+        };
 
         expenseChart.getData().clear(); // Clear previous series if necessary
         expenseChart.getData().add(series);
-
     }
     
     @FXML
