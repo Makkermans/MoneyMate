@@ -32,6 +32,8 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Circle;
 import model.Acount;
 import model.AcountDAOException;
 import model.User;
@@ -74,6 +76,8 @@ public class DashboardController implements Initializable {
     private String username;
     
     private ObservableList<Charge> chargeData = FXCollections.observableArrayList();
+    @FXML
+    private Circle circleImage;
 
     /**
      * Initializes the controller class.
@@ -91,7 +95,8 @@ public class DashboardController implements Initializable {
             this.username = currentUser.getNickName();
             nameDashboard.setText(this.username); // Set the username in the TextField
             if (currentUser.getImage() != null) {
-                profilePicture.setImage(currentUser.getImage());
+                //profilePicture.setImage(currentUser.getImage());
+                circleImage.setFill(new ImagePattern(currentUser.getImage()));
             }
             loadData();
             setupChart();

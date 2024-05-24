@@ -59,8 +59,8 @@ public class MoneyMateApplication extends Application {
         stage.setScene(scene);
         stage.setResizable(true);
         stage.setTitle("MoneyMate - Your Financial Companion");
-        stage.setHeight(400);
-        stage.setWidth(600);
+        stage.setHeight(600);
+        stage.setWidth(800);
         stage.setMinHeight(100);
         stage.setMinWidth(200);
         stage.show();

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
@@ -11,11 +12,11 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@../Style/GeneralStyle.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.RegisterController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" stylesheets="@../Style/GeneralStyle.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.RegisterController">
    <center>
       <GridPane prefHeight="295.0" prefWidth="600.0" BorderPane.alignment="CENTER">
         <columnConstraints>
@@ -58,7 +59,7 @@
                   <Image url="@../Pictures/Standard_Profile_Picture.png" />
                </image>
             </ImageView>
-            <Button fx:id="editPictureButton" mnemonicParsing="false" onAction="#editPictureClicked" text="Edit Picture" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
+            <Button fx:id="editPictureButton" mnemonicParsing="false" onAction="#editPictureClicked" text="Edit Picture" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Please complete your profile below" underline="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="BOTTOM">
                <font>
                   <Font name="Comic Sans MS Bold" size="15.0" />
@@ -73,6 +74,7 @@
             <Label fx:id="wrongNickname" textFill="#f40808" GridPane.columnSpan="3" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="BOTTOM" />
             <Label fx:id="wrongEmail" textFill="#e70909" GridPane.columnSpan="3" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="BOTTOM" />
             <Label fx:id="wrongPassword" textFill="#f20808" GridPane.columnSpan="3" GridPane.halignment="CENTER" GridPane.rowIndex="5" GridPane.valignment="BOTTOM" />
+            <Circle fx:id="circle" fill="DODGERBLUE" radius="72.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="4.0" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
          </children>
       </GridPane>
    </center>
@@ -90,7 +92,7 @@
    <bottom>
       <HBox alignment="CENTER" prefHeight="51.0" prefWidth="600.0" BorderPane.alignment="CENTER">
          <children>
-            <GridPane prefHeight="51.0" prefWidth="166.0">
+            <GridPane prefHeight="51.0" prefWidth="255.0">
                <columnConstraints>
                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
@@ -100,8 +102,11 @@
                </rowConstraints>
                <children>
                   <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#cancelClicked" text="Cancel" />
-                  <Button fx:id="confirmButton" mnemonicParsing="false" onAction="#applyClicked" prefHeight="26.0" prefWidth="56.0" text="Apply" GridPane.columnIndex="1" GridPane.halignment="CENTER" />
+                  <Button fx:id="confirmButton" mnemonicParsing="false" onAction="#applyClicked" text="Apply" GridPane.columnIndex="1" GridPane.halignment="RIGHT" />
                </children>
+               <HBox.margin>
+                  <Insets bottom="20.0" />
+               </HBox.margin>
             </GridPane>
          </children>
       </HBox>

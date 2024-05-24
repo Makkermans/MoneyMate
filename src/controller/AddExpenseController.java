@@ -21,6 +21,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
@@ -51,7 +52,7 @@ public class AddExpenseController implements Initializable {
     @FXML
     private ImageView profilePicture;
     @FXML
-    private ChoiceBox<Category> chooseCategory;
+    private ComboBox<Category> chooseCategory;
     @FXML
     private Button addCategory;
     @FXML
@@ -62,6 +63,10 @@ public class AddExpenseController implements Initializable {
     private Label errorMessage;
     @FXML
     private DatePicker datapicker;
+    @FXML
+    private TextField expenseUnit;
+    @FXML
+    private Button removeCatgory;
 
     /**
      * Initializes the controller class.
@@ -94,9 +99,6 @@ public class AddExpenseController implements Initializable {
     }
     
     
-    @FXML
-    private void pickDatepressed(ActionEvent event) {
-    }
 
     @FXML
     private void addCategoryPressed(ActionEvent event) {
@@ -188,6 +190,10 @@ public class AddExpenseController implements Initializable {
         }
         
     
+    }
+
+    @FXML
+    private void removeCategoryPressed(ActionEvent event) {
     }
     
 
