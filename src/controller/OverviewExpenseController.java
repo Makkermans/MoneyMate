@@ -93,6 +93,10 @@ public class OverviewExpenseController implements Initializable {
     private ObservableList<Charge> chargeData = FXCollections.observableArrayList();
     
     private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    @FXML
+    private TableColumn<Charge, Integer> unitsColumn;
+    @FXML
+    private Button detailButton;
 
     /**
      * Initializes the controller class.
@@ -102,15 +106,16 @@ public class OverviewExpenseController implements Initializable {
         // Set up the cell value factories for the table columns
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         dateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
-        categoryColumn.setCellValueFactory(new PropertyValueFactory<>("category")); // Assuming there's a getCategoryName method in Charge
+        categoryColumn.setCellValueFactory(new PropertyValueFactory<>("category")); 
         amountColumn.setCellValueFactory(new PropertyValueFactory<>("cost"));
+        unitsColumn.setCellValueFactory(new PropertyValueFactory<>("units"));
         try{
         User currentUser = Acount.getInstance().getLoggedUser();
         if (currentUser != null) {
             this.nickname = currentUser.getNickName();
             username.setText(this.nickname); // Set the username in the TextField
             if (currentUser.getImage() != null) {
-                //profilePicture.setImage(currentUser.getImage());
+                
                 circle.setFill(new ImagePattern(currentUser.getImage()));
             }
             loadData();
@@ -119,10 +124,13 @@ public class OverviewExpenseController implements Initializable {
         }       catch (AcountDAOException | IOException ex) {
         Logger.getLogger(editUserController.class.getName()).log(Level.SEVERE, null, ex); 
         }
+         // Add a listener to the search TextField
+        search.textProperty().addListener((observable, oldValue, newValue) -> filterCharges());
+        datepicker.valueProperty().addListener((observable, oldValue, newValue) -> filterCharges());
     }    
     private void loadData() throws IOException {
     try {
-        List<Charge> charges = Acount.getInstance().getUserCharges(); // Using the getUserCharges method
+        List<Charge> charges = Acount.getInstance().getUserCharges(); 
         if (charges != null) {
             chargeData.setAll(charges);
         } else {
@@ -131,8 +139,32 @@ public class OverviewExpenseController implements Initializable {
         expenseTable.setItems(chargeData);
     } catch (AcountDAOException e) {
         e.printStackTrace(); // Log the exception
-        // You might want to show an error message to the user
+        
     }}
+    private void filterCharges() {
+        String searchText = search.getText();
+        LocalDate filterDate = datepicker.getValue();
+        
+        if ((searchText == null || searchText.isEmpty()) && filterDate == null) {
+            expenseTable.setItems(chargeData); // Reset the table view if the search text and filter date are empty
+        } else {
+            ObservableList<Charge> filteredCharges = FXCollections.observableArrayList();
+            for (Charge charge : chargeData) {
+                boolean matchesSearchText = searchText == null || searchText.isEmpty() || 
+                    charge.getName().toLowerCase().contains(searchText.toLowerCase()) ||
+                    charge.getCategory().getName().toLowerCase().contains(searchText.toLowerCase()) ||
+                    charge.getDate().toString().contains(searchText) ||
+                    String.valueOf(charge.getCost()).contains(searchText);
+                
+                boolean matchesDate = filterDate == null || charge.getDate().isEqual(filterDate);
+                
+                if (matchesSearchText && matchesDate) {
+                    filteredCharges.add(charge);
+                }
+            }
+            expenseTable.setItems(filteredCharges);
+        }
+    }
     
     @FXML
     private void SignOffClicked(ActionEvent event) throws Exception{
@@ -142,7 +174,7 @@ public class OverviewExpenseController implements Initializable {
         MoneyMateApplication.setRoot(root);
     } catch (Exception e) {
         e.printStackTrace(); // Log the exception for debugging purposes.
-        // Consider displaying an error message to the user or logging the error more formally.
+        
     }
     }
 
@@ -154,14 +186,94 @@ public class OverviewExpenseController implements Initializable {
         MoneyMateApplication.setRoot(root);
     } catch (Exception e) {
         e.printStackTrace(); // Log the exception for debugging purposes.
-        // Consider displaying an error message to the user or logging the error more formally.
+       
     }
     }
     
 
     @FXML
     private void modifyButtonClicked(ActionEvent event) {
+    Charge selectedCharge = expenseTable.getSelectionModel().getSelectedItem();
+        if (selectedCharge != null) {
+            // Display the selected charge details in editable fields
+            TextField nameField = new TextField(selectedCharge.getName());
+            TextField costField = new TextField(String.valueOf(selectedCharge.getCost()));
+            TextField descriptionField = new TextField(selectedCharge.getDescription());
+            DatePicker datePicker = new DatePicker(selectedCharge.getDate());
+            TextField categoryField = new TextField(selectedCharge.getCategory().getName());
+            TextField unitsField = new TextField(String.valueOf(selectedCharge.getUnits()));
+            ImageView imageView = new ImageView(selectedCharge.getImageScan());
+            imageView.setFitHeight(100);
+            imageView.setFitWidth(100);
+            imageView.setPreserveRatio(true);
+            
+            
+            // Allow image change on click
+            imageView.setOnMouseClicked(event1 -> {
+                FileChooser fileChooser = new FileChooser();
+                fileChooser.getExtensionFilters().addAll(
+                    new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg")
+                );
+                File selectedFile = fileChooser.showOpenDialog(null);
+                if (selectedFile != null) {
+                    Image newImage = new Image(selectedFile.toURI().toString());
+                    imageView.setImage(newImage);
+                }
+            });
+
+            // Create a dialog for modification
+            VBox vbox = new VBox();
+            vbox.getChildren().addAll(
+                new Label("Name:"), nameField,
+                new Label("Category:"), categoryField,
+                new Label("Description:"), descriptionField,
+                new Label("Date:"), datePicker,
+                new Label("Cost:"), costField,
+                new Label("Units:"), unitsField,
+                new Label("Image:"), imageView
+                    
+            );
+
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Modify Charge");
+            alert.setHeaderText("Modify the details of the selected charge:");
+            alert.getDialogPane().setContent(vbox);
+
+            if (alert.showAndWait().get() == ButtonType.OK) {
+            // Validate and update the charge details
+            try {
+                // Remove the old charge
+                Acount.getInstance().removeCharge(selectedCharge);
+
+                // Register the updated charge
+                Acount.getInstance().registerCharge(
+                    nameField.getText(),
+                    descriptionField.getText(),
+                    Double.parseDouble(costField.getText()),
+                    Integer.parseInt(unitsField.getText()),
+                    imageView.getImage(),
+                    datePicker.getValue(),
+                    selectedCharge.getCategory()
+                );
+
+                // Update the table view
+                loadData();
+
+            } catch (NumberFormatException e) {
+                showErrorMessage("Invalid input: " + e.getMessage());
+            } catch (AcountDAOException | IOException e) {
+                showErrorMessage("Failed to update the charge: " + e.getMessage());
+            }
+        }
+    } else {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("No Selection");
+        alert.setHeaderText("No Charge Selected");
+        alert.setContentText("Please select a charge in the table.");
+        alert.showAndWait();
     }
+    }    
+    
 
     @FXML
     private void deleteButtonClicked(ActionEvent event) throws IOException {
@@ -170,12 +282,12 @@ public class OverviewExpenseController implements Initializable {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("Delete Confirmation");
             alert.setHeaderText("Are you sure you want to delete this charge?");
-            alert.setContentText("Name: " + selectedCharge.getName() + "\nAmount: " + selectedCharge.getCost());
+            alert.setContentText("Name: " + selectedCharge.getName() + "\nAmount: " + selectedCharge.getCost() + "\nCategory: " + selectedCharge.getCategory()  + "\nDate: " + selectedCharge.getDate());
 
             if (alert.showAndWait().get() == ButtonType.OK) {
                 chargeData.remove(selectedCharge);
                 try {
-                    Acount.getInstance().removeCharge(selectedCharge); // Assuming there's a method to remove charge from the account
+                    Acount.getInstance().removeCharge(selectedCharge); 
                 } catch (AcountDAOException e) {
                     showErrorMessage("Failed to delete the charge: " + e.getMessage());
                 }
@@ -326,7 +438,65 @@ public class OverviewExpenseController implements Initializable {
         MoneyMateApplication.setRoot(root);
     } catch (Exception e) {
         e.printStackTrace(); // Log the exception for debugging purposes.
-        // Consider displaying an error message to the user or logging the error more formally.
+        
     }
     }
+
+    @FXML
+    private void detailButtonClicked(ActionEvent event) {
+     Charge selectedCharge = expenseTable.getSelectionModel().getSelectedItem();
+    if (selectedCharge != null) {
+        // Display the selected charge details in non-editable fields
+        TextField nameField = new TextField(selectedCharge.getName());
+        nameField.setEditable(false);
+        TextField descriptionField = new TextField(selectedCharge.getDescription());
+        descriptionField.setEditable(false);
+        TextField costField = new TextField(String.valueOf(selectedCharge.getCost()));
+        costField.setEditable(false);
+        TextField unitsField = new TextField(String.valueOf(selectedCharge.getUnits()));
+        unitsField.setEditable(false);
+        DatePicker datePicker = new DatePicker(selectedCharge.getDate());
+        datePicker.setEditable(false);
+        TextField categoryField = new TextField(selectedCharge.getCategory().getName());
+        categoryField.setEditable(false);
+        
+        double totalAmount = selectedCharge.getUnits() * selectedCharge.getCost();
+        TextField totalAmountField = new TextField(String.valueOf(totalAmount));
+        totalAmountField.setEditable(false);
+        
+
+        
+        ImageView imageView = new ImageView(selectedCharge.getImageScan());
+        imageView.setFitHeight(100);
+        imageView.setFitWidth(100);
+        imageView.setPreserveRatio(true);
+        
+        // Create a dialog for showing details
+        VBox vbox = new VBox();
+         // Add some spacing between elements
+        vbox.getChildren().addAll(
+                new Label("Name:"), nameField,
+                new Label("Category:"), categoryField,
+                new Label("Description:"), descriptionField,
+                new Label("Date:"), datePicker,
+                new Label("Cost:"), costField,
+                new Label("Units:"), unitsField,
+                new Label("Total Amount:"), totalAmountField,
+                new Label("Image:"), imageView
+        );
+
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Expense Details");
+        alert.setHeaderText("Details of the selected expense:");
+        alert.getDialogPane().setContent(vbox);
+
+        alert.showAndWait();
+    } else {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("No Selection");
+        alert.setHeaderText("No Charge Selected");
+        alert.setContentText("Please select a charge in the table.");
+        alert.showAndWait();
+    }
+}
 }

@@ -112,9 +112,10 @@
                         <TableView fx:id="expenseTable" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="4" GridPane.rowIndex="1" GridPane.rowSpan="2">
                            <columns>
                               <TableColumn fx:id="nameColumn" prefWidth="75.0" text="Name" />
-                              <TableColumn fx:id="dateColumn" prefWidth="130.0" text="Date" />
-                              <TableColumn fx:id="categoryColumn" prefWidth="75.0" text="Category" />
+                              <TableColumn fx:id="dateColumn" prefWidth="160.0" text="Date" />
+                              <TableColumn fx:id="categoryColumn" prefWidth="164.0" text="Category" />
                               <TableColumn fx:id="amountColumn" prefWidth="75.0" text="Amount" />
+                              <TableColumn fx:id="unitsColumn" prefWidth="75.0" text="Units" />
                            </columns>
                            <GridPane.margin>
                               <Insets bottom="20.0" left="20.0" />
@@ -139,6 +140,11 @@
          <right>
             <VBox prefHeight="200.0" prefWidth="100.0" spacing="15.0" BorderPane.alignment="CENTER">
                <children>
+                  <Button fx:id="detailButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#detailButtonClicked" text="Detail">
+                     <VBox.margin>
+                        <Insets right="10.0" top="10.0" />
+                     </VBox.margin>
+                  </Button>
                   <Button fx:id="modifyButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#modifyButtonClicked" text="Modify">
                      <VBox.margin>
                         <Insets bottom="10.0" right="10.0" top="10.0" />
