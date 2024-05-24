@@ -4,6 +4,9 @@
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
@@ -11,6 +14,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
@@ -84,18 +88,28 @@
       </GridPane>
    </center>
    <top>
-      <HBox alignment="CENTER" prefHeight="62.0" prefWidth="800.0" BorderPane.alignment="CENTER">
+      <VBox>
          <children>
-            <Text fill="#15650a" strokeType="OUTSIDE" strokeWidth="0.0" text="Edit User" textAlignment="CENTER" wrappingWidth="291.57080078125">
-               <font>
-                  <Font name="Comic Sans MS Bold" size="33.0" />
-               </font>
-               <HBox.margin>
-                  <Insets left="150.0" right="150.0" />
-               </HBox.margin>
-            </Text>
+            <MenuBar>
+              <menus>
+                <Menu mnemonicParsing="false" text="Log Out">
+                  <items>
+                    <MenuItem fx:id="logoutButton" mnemonicParsing="false" onAction="#logoutClicked" text="Sign Off" />
+                  </items>
+                </Menu>
+              </menus>
+            </MenuBar>
+            <HBox alignment="CENTER">
+               <children>
+                  <Text fill="#15650a" strokeType="OUTSIDE" strokeWidth="0.0" text="Edit User" textAlignment="CENTER" wrappingWidth="291.57080078125">
+                     <font>
+                        <Font name="Comic Sans MS Bold" size="33.0" />
+                     </font>
+                  </Text>
+               </children>
+            </HBox>
          </children>
-      </HBox>
+      </VBox>
    </top>
    <bottom>
       <HBox alignment="CENTER" prefHeight="54.0" prefWidth="600.0" BorderPane.alignment="CENTER">

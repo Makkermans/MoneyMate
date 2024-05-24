@@ -21,10 +21,13 @@ import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
 import model.Acount;
 import model.AcountDAOException;
@@ -43,12 +46,18 @@ public class editUserController implements Initializable {
     private TextField nameField, userField, emailField, surnameField;
     @FXML
     private PasswordField passwordField;
-    @FXML
-    private ImageView profilePicture;
+    
     @FXML
     private Label wrongEmail, Wrongpassword;
 
     private String username; // Declare username as a class member
+    @FXML
+    private Button editPictureButton;
+    @FXML
+    private Circle circleImage;
+    private Image profilePicture;
+    @FXML
+    private MenuItem logoutButton;
 
     @Override
 public void initialize(URL url, ResourceBundle rb) {
@@ -64,7 +73,8 @@ public void initialize(URL url, ResourceBundle rb) {
             emailField.setText(currentUser.getEmail());
             passwordField.setText(currentUser.getPassword());
             if (currentUser.getImage() != null) {
-                profilePicture.setImage(currentUser.getImage());
+                profilePicture = currentUser.getImage();
+                circleImage.setFill(new ImagePattern(profilePicture));
             }
 
             // Make the username field non-editable
@@ -99,7 +109,7 @@ public void initialize(URL url, ResourceBundle rb) {
         
         String password = passwordField.getText();
         String email = emailField.getText();
-        Image image = profilePicture.getImage();
+        Image image = (profilePicture != null) ? profilePicture : new Image("/Pictures/default.jpg");
 
         // Validate data
         if (!validateData(password, email)) {
@@ -134,10 +144,11 @@ private void navigateToLoginScreen() {
 
 
 private boolean validateData(String password, String email) {
+    boolean isValid = true;
     // Validate password length
     if (!User.checkPassword(password)) {
         Wrongpassword.setText("Passwords must be 8-20 characters, include at least one uppercase & lowercase letter, one digit and one special character.");
-        return false;
+        isValid = false;
     }
     else {
         Wrongpassword.setText("");
@@ -146,13 +157,13 @@ private boolean validateData(String password, String email) {
     // Validate email format
     if (!User.checkEmail(email)) {
         wrongEmail.setText("Enter a valid email address.");
-        return false;
+        isValid = false;
     }
     else {
         wrongEmail.setText("");
     }
 
-    return true;
+    return isValid;
 }
 
     @FXML
@@ -177,13 +188,25 @@ private boolean validateData(String password, String email) {
         if (file != null) {
             try {
                 String imagePath = file.toURI().toURL().toString();
-                Image image = new Image(imagePath);
-                profilePicture.setImage(image); // Set the image in ImageView
+                profilePicture = new Image(imagePath);
+                circleImage.setFill(new ImagePattern(profilePicture)); // Set the image in ImageView
             } catch (MalformedURLException ex) {
                 System.err.println("Error loading image: "+ ex.getMessage());
                 // Handle exceptions possibly with a dialog
             }
         }
+    }
+
+    @FXML
+    private void logoutClicked(ActionEvent event) throws Exception{
+        try {
+        FXMLLoader fxmlloader = new FXMLLoader(getClass().getResource("/view/hello-view.fxml"));
+        Parent root = fxmlloader.load();
+        MoneyMateApplication.setRoot(root);
+    } catch (Exception e) {
+        e.printStackTrace(); // Log the exception for debugging purposes.
+        // Consider displaying an error message to the user or logging the error more formally.
+    }
     }
     
 }
