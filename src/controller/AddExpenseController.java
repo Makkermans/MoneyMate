@@ -200,6 +200,14 @@ public class AddExpenseController implements Initializable {
 
     @FXML
     private void cancelButtonPressed(ActionEvent event) {
+        try {
+        FXMLLoader fxmlloader = new FXMLLoader(getClass().getResource("/view/Dashboard-view.fxml"));
+        Parent root = fxmlloader.load();
+        MoneyMateApplication.setRoot(root);
+    } catch (Exception e) {
+        e.printStackTrace(); // Log the exception for debugging purposes.
+        
+    }
     }
     
 
