@@ -23,6 +23,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
@@ -135,9 +136,14 @@ public class OverviewExpenseController implements Initializable {
     
     @FXML
     private void SignOffClicked(ActionEvent event) throws Exception{
-        FXMLLoader fxmlloader= new FXMLLoader(getClass().getResource("view/hello-view.fxml"));
+        try {
+        FXMLLoader fxmlloader = new FXMLLoader(getClass().getResource("/view/hello-view.fxml"));
         Parent root = fxmlloader.load();
         MoneyMateApplication.setRoot(root);
+    } catch (Exception e) {
+        e.printStackTrace(); // Log the exception for debugging purposes.
+        // Consider displaying an error message to the user or logging the error more formally.
+    }
     }
 
     @FXML
@@ -158,7 +164,30 @@ public class OverviewExpenseController implements Initializable {
     }
 
     @FXML
-    private void deleteButtonClicked(ActionEvent event) {
+    private void deleteButtonClicked(ActionEvent event) throws IOException {
+        Charge selectedCharge = expenseTable.getSelectionModel().getSelectedItem();
+        if (selectedCharge != null) {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Delete Confirmation");
+            alert.setHeaderText("Are you sure you want to delete this charge?");
+            alert.setContentText("Name: " + selectedCharge.getName() + "\nAmount: " + selectedCharge.getCost());
+
+            if (alert.showAndWait().get() == ButtonType.OK) {
+                chargeData.remove(selectedCharge);
+                try {
+                    Acount.getInstance().removeCharge(selectedCharge); // Assuming there's a method to remove charge from the account
+                } catch (AcountDAOException e) {
+                    showErrorMessage("Failed to delete the charge: " + e.getMessage());
+                }
+            }
+        } else {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("No Selection");
+            alert.setHeaderText("No Charge Selected");
+            alert.setContentText("Please select a charge in the table.");
+            alert.showAndWait();
+        }
+    
     }
 
     @FXML
