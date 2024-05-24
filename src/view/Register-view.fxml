@@ -5,8 +5,6 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -54,11 +52,6 @@
             <TextField fx:id="userField" promptText="Username" GridPane.columnIndex="1" GridPane.rowIndex="3" />
             <TextField fx:id="emailField" promptText="Jose@upv.es" GridPane.columnIndex="1" GridPane.rowIndex="4" />
             <PasswordField fx:id="passwordField" promptText="Password" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-            <ImageView fx:id="profilePicture" fitHeight="128.0" fitWidth="123.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1">
-               <image>
-                  <Image url="@../Pictures/Standard_Profile_Picture.png" />
-               </image>
-            </ImageView>
             <Button fx:id="editPictureButton" mnemonicParsing="false" onAction="#editPictureClicked" text="Edit Picture" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Please complete your profile below" underline="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="BOTTOM">
                <font>

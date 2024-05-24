@@ -54,9 +54,6 @@ public class RegisterController implements Initializable {
     private PasswordField passwordField;
 
     @FXML
-    private ImageView profilePicture;
-
-    @FXML
     private Button editPictureButton;
 
     @FXML
@@ -74,6 +71,8 @@ public class RegisterController implements Initializable {
     private Label wrongPassword;
     @FXML
     private Circle circle;
+    
+    private Image profilePicture;
 
     /**
      * Initializes the controller class.
@@ -81,8 +80,8 @@ public class RegisterController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // Default Image
-        Image defaultImage = new Image("/Pictures/default.jpg");
-        circle.setFill(new ImagePattern(defaultImage));
+        profilePicture = new Image("/Pictures/default.jpg");
+        circle.setFill(new ImagePattern(profilePicture));
         
         
         // Button Bindings
@@ -119,7 +118,7 @@ private void applyClicked(ActionEvent event) {
         String username = userField.getText();
         String password = passwordField.getText();
         String email = emailField.getText();
-        Image image = profilePicture.getImage();
+        //Image image = profilePicture.getImage();
 
         // Validate data
         if (!validateData(username, password, email)) {
@@ -127,7 +126,7 @@ private void applyClicked(ActionEvent event) {
             return;
         }
 
-        boolean saveSuccess = Acount.getInstance().registerUser(name, surname, email, username, password, image, LocalDate.now());
+        boolean saveSuccess = Acount.getInstance().registerUser(name, surname, email, username, password, profilePicture, LocalDate.now());
 
         if (saveSuccess) {
             // Show success alert
@@ -219,9 +218,9 @@ private boolean validateData(String nickname, String password, String email) {
         if (file != null) {
             try {
                 String imagePath = file.toURI().toURL().toString();
-                Image image = new Image(imagePath);
+                profilePicture = new Image(imagePath);
                 //profilePicture.setImage(image); // Set the image in ImageView
-                circle.setFill(new ImagePattern(image));
+                circle.setFill(new ImagePattern(profilePicture));
             } catch (MalformedURLException ex) {
                 System.err.println("Error loading image: "+ ex.getMessage());
                 // Handle exceptions possibly with a dialog
