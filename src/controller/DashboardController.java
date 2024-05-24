@@ -174,6 +174,7 @@ public class DashboardController implements Initializable {
 
     @FXML
     private void addExpenseClicked(ActionEvent event) {
+        
         try {
         FXMLLoader fxmlloader = new FXMLLoader(getClass().getResource("/view/AddExpense-view.fxml"));
         Parent root = fxmlloader.load();

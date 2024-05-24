@@ -69,7 +69,7 @@
                               <Insets left="20.0" />
                            </GridPane.margin>
                         </Text>
-                        <Label fx:id="allExpenses" onDragDetected="#allExpensesClicked" text="See All &gt;" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
+                        <Label fx:id="allExpenses" onMouseClicked="#allExpensesClicked" text="See All &gt;" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
                            <cursor>
                               <Cursor fx:constant="HAND" />
                            </cursor>

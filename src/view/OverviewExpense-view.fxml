@@ -24,7 +24,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="600.0" prefWidth="800.0" stylesheets="@../Style/GeneralStyle.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.OverviewExpenseController">
+<AnchorPane prefHeight="600.0" prefWidth="800.0" stylesheets="@../Style/GeneralStyle.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.OverviewExpenseController">
    <children>
       <BorderPane layoutX="315.0" layoutY="146.0" prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <top>
@@ -59,7 +59,7 @@
                                     <Insets left="20.0" top="20.0" />
                                  </GridPane.margin>
                               </Text>
-                              <Label text="Big D" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
+                              <Label fx:id="username" text="Big D" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
                                  <font>
                                     <Font name="System Bold" size="18.0" />
                                  </font>
@@ -72,7 +72,7 @@
                                     <Insets right="25.0" />
                                  </GridPane.margin>
                               </Circle>
-                              <ImageView fitHeight="26.0" fitWidth="52.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.valignment="BOTTOM">
+                              <ImageView fx:id="userChange" fitHeight="26.0" fitWidth="52.0" onMouseClicked="#userChangeClicked" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.valignment="BOTTOM">
                                  <image>
                                     <Image url="@../../../Pictures/Edit_Pencil.png" />
                                  </image>
@@ -109,12 +109,12 @@
                         <RowConstraints maxHeight="92.0" minHeight="10.0" prefHeight="61.0" vgrow="SOMETIMES" />
                      </rowConstraints>
                      <children>
-                        <TableView prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="4" GridPane.rowIndex="1" GridPane.rowSpan="2">
+                        <TableView fx:id="expenseTable" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="4" GridPane.rowIndex="1" GridPane.rowSpan="2">
                            <columns>
-                              <TableColumn prefWidth="75.0" text="Name" />
-                              <TableColumn prefWidth="130.0" text="Date" />
-                              <TableColumn prefWidth="75.0" text="Category" />
-                              <TableColumn prefWidth="75.0" text="Amount" />
+                              <TableColumn fx:id="nameColumn" prefWidth="75.0" text="Name" />
+                              <TableColumn fx:id="dateColumn" prefWidth="130.0" text="Date" />
+                              <TableColumn fx:id="categoryColumn" prefWidth="75.0" text="Category" />
+                              <TableColumn fx:id="amountColumn" prefWidth="75.0" text="Amount" />
                            </columns>
                            <GridPane.margin>
                               <Insets bottom="20.0" left="20.0" />
@@ -124,8 +124,8 @@
                            </columnResizePolicy>
                         </TableView>
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Search Expense: " GridPane.halignment="RIGHT" />
-                        <TextField alignment="CENTER_RIGHT" promptText="🔍" GridPane.columnIndex="1" />
-                        <DatePicker GridPane.columnIndex="2" />
+                        <TextField fx:id="search" alignment="CENTER_RIGHT" promptText="🔍" GridPane.columnIndex="1" />
+                        <DatePicker fx:id="datepicker" GridPane.columnIndex="2" />
                         <VBox prefHeight="200.0" prefWidth="100.0" spacing="15.0" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
                            <padding>
                               <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
@@ -139,22 +139,22 @@
          <right>
             <VBox prefHeight="200.0" prefWidth="100.0" spacing="15.0" BorderPane.alignment="CENTER">
                <children>
-                  <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Modify">
+                  <Button fx:id="modifyButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#modifyButtonClicked" text="Modify">
                      <VBox.margin>
                         <Insets bottom="10.0" right="10.0" top="10.0" />
                      </VBox.margin>
                   </Button>
-                  <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Delete">
+                  <Button fx:id="deleteButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#deleteButtonClicked" text="Delete">
                      <VBox.margin>
                         <Insets bottom="10.0" right="10.0" />
                      </VBox.margin>
                   </Button>
-                  <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Print ">
+                  <Button fx:id="printButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#printButtonClicked" text="Print ">
                      <VBox.margin>
                         <Insets bottom="10.0" right="10.0" />
                      </VBox.margin>
                   </Button>
-                  <Button mnemonicParsing="false" text="Return">
+                  <Button fx:id="returnButton" mnemonicParsing="false" onAction="#returnButtonClikced" text="Return">
                      <VBox.margin>
                         <Insets top="100.0" />
                      </VBox.margin>
