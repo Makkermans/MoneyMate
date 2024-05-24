@@ -20,7 +20,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" stylesheets="@../Style/GeneralStyle.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.AddExpenseController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" stylesheets="@../Style/GeneralStyle.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.AddExpenseController">
    <top>
       <MenuBar BorderPane.alignment="CENTER">
         <menus>
@@ -39,9 +39,9 @@
       <GridPane alignment="CENTER" prefHeight="368.0" prefWidth="600.0">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" maxWidth="132.0" minWidth="10.0" prefWidth="103.0" />
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="170.0" minWidth="10.0" prefWidth="170.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="170.0" minWidth="10.0" />
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="131.0" minWidth="10.0" prefWidth="94.0" />
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="140.0" minWidth="10.0" prefWidth="140.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="170.0" minWidth="10.0" />
           <ColumnConstraints hgrow="SOMETIMES" maxWidth="102.0" minWidth="10.0" prefWidth="89.0" />
         </columnConstraints>
         <rowConstraints>
@@ -109,6 +109,7 @@
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Cost ($/£/€): " GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="BOTTOM" />
             <TextField fx:id="expenseAmount" promptText="5000" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.valignment="BOTTOM" />
             <ComboBox fx:id="chooseCategory" prefWidth="150.0" promptText="Select" GridPane.columnIndex="3" GridPane.rowIndex="2" GridPane.valignment="TOP" />
+            <Button fx:id="cancelButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#cancelButtonPressed" text="Cancel" GridPane.columnIndex="1" GridPane.rowIndex="4" />
          </children>
       </GridPane>
    </center>

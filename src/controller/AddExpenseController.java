@@ -67,6 +67,8 @@ public class AddExpenseController implements Initializable {
     private TextField expenseUnit;
     @FXML
     private Button removeCatgory;
+    @FXML
+    private Button cancelButton;
 
     /**
      * Initializes the controller class.
@@ -194,6 +196,10 @@ public class AddExpenseController implements Initializable {
 
     @FXML
     private void removeCategoryPressed(ActionEvent event) {
+    }
+
+    @FXML
+    private void cancelButtonPressed(ActionEvent event) {
     }
     
 
