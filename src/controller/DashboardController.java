@@ -28,6 +28,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -37,6 +38,7 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import model.Acount;
 import model.AcountDAOException;
+import model.Category;
 import model.User;
 import model.Charge;
 
@@ -53,7 +55,7 @@ public class DashboardController implements Initializable {
     @FXML
     private TableColumn<Charge, LocalDate> dateColumn;
     @FXML
-    private TableColumn<Charge, String> categoryColumn;
+    private TableColumn<Charge, Category> categoryColumn; // Ensure this is Category type
     @FXML
     private TableColumn<Charge, Double> amountColumn;
     @FXML
@@ -87,6 +89,18 @@ public class DashboardController implements Initializable {
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         dateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
         categoryColumn.setCellValueFactory(new PropertyValueFactory<>("category"));
+        categoryColumn.setCellFactory(column -> new TableCell<Charge, Category>() {
+            
+            @Override
+            protected void updateItem(Category item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                } else {
+                    setText(item.getName()); // Ensure 'getName' is the correct method to get the category name from a Category object
+                }
+            }
+        });
         amountColumn.setCellValueFactory(new PropertyValueFactory<>("cost"));
 
         try {
@@ -154,30 +168,17 @@ public class DashboardController implements Initializable {
     }
 
     private void setupCategoryChart() {
-    System.out.println("Setting up category chart");
+        XYChart.Series<String, Number> series = new XYChart.Series<>();
+        Map<String, Double> summary = chargeData.stream()
+            .collect(Collectors.groupingBy(
+                charge -> charge.getCategory().getName(),  // Assuming getCategory().getName() is correct
+                Collectors.summingDouble(Charge::getCost)));
 
-    // Clear existing data
-    expenseChart.getData().clear();
-    System.out.println("Cleared existing data from the chart");
+        summary.forEach((categoryName, sum) -> series.getData().add(new XYChart.Data<>(categoryName, sum)));
 
-    XYChart.Series<String, Number> series = new XYChart.Series<>();
-    System.out.println("Series created");
-
-    Map<String, Double> summary = chargeData.stream()
-        .collect(Collectors.groupingBy(
-            charge -> charge.getCategory().toString(),
-            Collectors.summingDouble(Charge::getCost)));
-    System.out.println("Summary computed: " + summary);
-
-    summary.forEach((category, sum) -> {
-        System.out.println("Adding data to series: Category = " + category + ", Sum = " + sum);
-        series.getData().add(new XYChart.Data<>(category, sum));
-    });
-
-    series.setName("Expenses by Category");
-    expenseChart.getData().add(series);
-    System.out.println("Series added to chart");
-}
+        series.setName("Expenses by Category");
+        expenseChart.getData().add(series);
+    }
 
 
 
