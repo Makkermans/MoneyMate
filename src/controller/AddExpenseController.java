@@ -175,6 +175,21 @@ public class AddExpenseController implements Initializable {
 
             boolean saveSuccess = Acount.getInstance().registerCharge(title, description, amount, unit, image, date, category);
             if (saveSuccess) {
+                // Show success animation or message
+                Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
+                successAlert.setTitle("Expense Added");
+                successAlert.setHeaderText(null);
+                successAlert.setContentText("Expense successfully added!");
+                successAlert.showAndWait();
+
+                // Clear all fields after success
+                expenseTitle.clear();
+                expenseAmount.clear();
+                expenseDescription.clear();
+                chooseCategory.setValue(null);
+                receptPicture.setImage(null);
+                expenseUnit.clear();
+                datapicker.setValue(null);
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/Dashboard-view.fxml"));
                 Parent root = fxmlLoader.load();
                 MoneyMateApplication.setRoot(root);

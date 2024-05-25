@@ -272,7 +272,7 @@ private boolean validateData(String nickname, String password, String email) thr
             try {
                 String imagePath = file.toURI().toURL().toString();
                 Image image = new Image(imagePath); // Correctly creating an Image
-                profilePicture.setImage(image); // Correctly setting the Image into the ImageView
+                 // Correctly setting the Image into the ImageView
                 circle.setFill(new ImagePattern(image));
             } catch (MalformedURLException ex) {
                 System.err.println("Error loading image: "+ ex.getMessage());
