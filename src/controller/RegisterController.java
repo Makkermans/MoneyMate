@@ -192,7 +192,7 @@ private boolean validateData(String nickname, String password, String email) thr
     }
 //|| !User.checkNickName(nickname)
     // Check if the nickname already exists in the database
-    if (user.checkNickName(nickname)  ) {
+    if (!User.checkNickName(nickname)  ) {
         String errorNickname = "Nickname already taken \n" +
                                 "Please choose another.";
         wrongNickname.setText(errorNickname);
