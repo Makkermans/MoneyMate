@@ -111,6 +111,7 @@
             <ComboBox fx:id="chooseCategory" prefWidth="150.0" promptText="Select" GridPane.columnIndex="3" GridPane.rowIndex="2" GridPane.valignment="TOP" />
             <Button fx:id="cancelButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#cancelButtonPressed" text="Cancel" GridPane.columnIndex="1" GridPane.rowIndex="4" />
             <Text fx:id="name" strokeType="OUTSIDE" strokeWidth="0.0" GridPane.columnIndex="4" GridPane.halignment="LEFT" GridPane.valignment="BOTTOM" />
+            <ImageView fx:id="receptPicture" fitHeight="150.0" fitWidth="170.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" GridPane.rowIndex="3" GridPane.valignment="BOTTOM" />
          </children>
       </GridPane>
    </center>

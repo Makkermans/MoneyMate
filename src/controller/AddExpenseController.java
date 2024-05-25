@@ -19,7 +19,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
@@ -75,6 +77,8 @@ public class AddExpenseController implements Initializable {
     private Text name;
     
     private String username;
+    @FXML
+    private ImageView receptPicture;
 
     /**
      * Initializes the controller class.
@@ -172,7 +176,7 @@ public class AddExpenseController implements Initializable {
         File selectedFile = fileChooser.showOpenDialog(null);
         if (selectedFile != null) {
             Image image = new Image(selectedFile.toURI().toString());
-            profilePicture.setImage(image);  // Display the selected image
+            receptPicture.setImage(image);  // Display the selected image
         }
     }
 
@@ -183,7 +187,7 @@ public class AddExpenseController implements Initializable {
             double amount = Double.parseDouble(expenseAmount.getText());
             String description = expenseDescription.getText();
             Category category = chooseCategory.getValue();
-            Image image = profilePicture.getImage();
+            Image image = receptPicture.getImage();
             Integer unit = Integer.parseInt(expenseUnit.getText());
             LocalDate date = datapicker.getValue();   // This could also come from a DatePicker
 
@@ -207,8 +211,45 @@ public class AddExpenseController implements Initializable {
     }
 
     @FXML
-    private void removeCategoryPressed(ActionEvent event) {
+private void removeCategoryPressed(ActionEvent event) {
+    // Get the currently selected category
+    Category selectedCategory = chooseCategory.getValue();
+    if (selectedCategory != null) {
+        // Confirmation dialog
+        Alert confirmationDialog = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmationDialog.setTitle("Confirm Delete");
+        confirmationDialog.setHeaderText("Delete Category and Related Charges");
+        String contentText = "Are you sure you want to delete the category '" + selectedCategory.getName() + "' and all related charges? This action cannot be undone.";
+        Label label = new Label(contentText);
+        label.setWrapText(true);  // Enable text wrapping within the label
+        label.setMinHeight(Label.USE_PREF_SIZE);  // Ensure the label size is based on content
+        confirmationDialog.getDialogPane().setContent(label);
+
+        // Optionally set the minimum width of the dialog
+        confirmationDialog.getDialogPane().setMinWidth(400);
+        Optional<ButtonType> result = confirmationDialog.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            try {
+                // Delete the category and all related charges from the database
+                boolean deleteSuccess = Acount.getInstance().removeCategory(selectedCategory);
+                if (deleteSuccess) {
+                    // Remove the category from the ComboBox
+                    chooseCategory.getItems().remove(selectedCategory);
+                    System.out.println("Category and related charges deleted successfully.");
+                } else {
+                    System.out.println("Failed to delete category and charges.");
+                }
+            } catch (Exception e) {
+                System.out.println("Error deleting category: " + e.getMessage());
+                errorMessage.setText("Error deleting category. Please try again.");
+            }
+        }
+    } else {
+        // No category selected
+        errorMessage.setText("Please select a category to delete.");
     }
+}
+
 
     @FXML
     private void cancelButtonPressed(ActionEvent event) {
