@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.LocalDate;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,6 +21,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.PasswordField;
@@ -102,23 +104,35 @@ public void initialize(URL url, ResourceBundle rb) {
     }
     
     @FXML
-    private void applyClicked(ActionEvent event) {
-        try {
-            String name = nameField.getText();
-            String surname = surnameField.getText();
-            String password = passwordField.getText();
-            String email = emailField.getText();
-            Image image = (profilePicture != null) ? profilePicture : new Image("/Pictures/default.jpg");
+private void applyClicked(ActionEvent event) {
+    try {
+        // Prepare new data
+        String name = nameField.getText();
+        String surname = surnameField.getText();
+        String password = passwordField.getText();
+        String email = emailField.getText();
+        Image image = (profilePicture != null) ? profilePicture : new Image("/Pictures/default.jpg");
 
-            // Validate data
-            if (!validateData(password, email)) {
-                System.out.println("Invalid input. Please check your data and try again.");
-                return;
-            }
+        // Validate data
+        if (!validateData(password, email)) {
+            System.out.println("Invalid input. Please check your data and try again.");
+            return;
+        }
 
-            // Get current user and update details
-            User currentUser = Acount.getInstance().getLoggedUser();
-            if (currentUser != null) {
+        // Get current user
+        User currentUser = Acount.getInstance().getLoggedUser();
+        if (currentUser != null) {
+            // Store old data for comparison
+            String oldName = currentUser.getName();
+            String oldSurname = currentUser.getSurname();
+            String oldEmail = currentUser.getEmail();
+            String oldPassword = currentUser.getPassword();
+            Image oldImage = currentUser.getImage();
+
+            // Confirmation Dialog
+            boolean confirm = showConfirmationDialog(oldName, oldSurname, oldEmail, oldPassword, oldImage, name, surname, email, password, image);
+            if (confirm) {
+                // Update user details if confirmed
                 currentUser.setName(name);
                 currentUser.setSurname(surname);
                 currentUser.setEmail(email);
@@ -126,13 +140,37 @@ public void initialize(URL url, ResourceBundle rb) {
                 currentUser.setImage(image);
                 navigateToLoginScreen();
             } else {
-                System.out.println("No user is currently logged in.");
+                System.out.println("Update canceled by user.");
             }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            System.out.println("An error occurred. Please try again later.");
+        } else {
+            System.out.println("No user is currently logged in.");
         }
+    } catch (Exception ex) {
+        ex.printStackTrace();
+        System.out.println("An error occurred. Please try again later.");
     }
+}
+
+private boolean showConfirmationDialog(String oldName, String oldSurname, String oldEmail, String oldPassword, Image oldImage, String newName, String newSurname, String newEmail, String newPassword, Image newImage) {
+    // Create an Alert or a custom Dialog to show changes and ask for user confirmation
+    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+    alert.setTitle("Confirm Changes");
+    alert.setHeaderText("Please confirm your changes");
+
+    // Construct the message showing old vs new data
+    String contentText = "Please review your changes:\n\n" +
+                         "Name: " + oldName + " -> " + newName + "\n" +
+                         "Surname: " + oldSurname + " -> " + newSurname + "\n" +
+                         "Email: " + oldEmail + " -> " + newEmail + "\n" +
+                         "Password: [PROTECTED]" + "\n\n" +
+                         "Click OK to confirm or Cancel to revert changes.";
+    alert.setContentText(contentText);
+
+    // Show dialog and wait for response
+    Optional<ButtonType> result = alert.showAndWait();
+    return result.isPresent() && result.get() == ButtonType.OK;
+}
+
 
 
 
