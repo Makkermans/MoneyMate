@@ -100,35 +100,40 @@ public void initialize(URL url, ResourceBundle rb) {
             // Consider displaying an error message to the user or logging the error more formally.
         }
     }
+    
     @FXML
     private void applyClicked(ActionEvent event) {
-    try {
-        // Example of collecting data from input fields
-        String name = nameField.getText();
-        String surname = surnameField.getText();
-        
-        String password = passwordField.getText();
-        String email = emailField.getText();
-        Image image = (profilePicture != null) ? profilePicture : new Image("/Pictures/default.jpg");
+        try {
+            String name = nameField.getText();
+            String surname = surnameField.getText();
+            String password = passwordField.getText();
+            String email = emailField.getText();
+            Image image = (profilePicture != null) ? profilePicture : new Image("/Pictures/default.jpg");
 
-        // Validate data
-        if (!validateData(password, email)) {
-            System.out.println("Invalid input. Please check your data and try again.");
-            return;
+            // Validate data
+            if (!validateData(password, email)) {
+                System.out.println("Invalid input. Please check your data and try again.");
+                return;
+            }
+
+            // Get current user and update details
+            User currentUser = Acount.getInstance().getLoggedUser();
+            if (currentUser != null) {
+                currentUser.setName(name);
+                currentUser.setSurname(surname);
+                currentUser.setEmail(email);
+                currentUser.setPassword(password);
+                currentUser.setImage(image);
+                navigateToLoginScreen();
+            } else {
+                System.out.println("No user is currently logged in.");
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            System.out.println("An error occurred. Please try again later.");
         }
-
-        boolean saveSuccess = Acount.getInstance().registerUser(name, surname, email, this.username, password, image, LocalDate.now());
-
-        if (saveSuccess) {
-            navigateToLoginScreen();
-        } else {
-            System.out.println("Failed to save data. Please try again.");
-        }
-    } catch (Exception ex) {
-        ex.printStackTrace();
-        System.out.println("An error occurred. Please try again later.");
     }
-}
+
 
 
 private void navigateToLoginScreen() {
@@ -147,7 +152,10 @@ private boolean validateData(String password, String email) {
     boolean isValid = true;
     // Validate password length
     if (!User.checkPassword(password)) {
-        Wrongpassword.setText("Passwords must be 8-20 characters, include at least one uppercase & lowercase letter, one digit and one special character.");
+        String errorPassword = "Password needs at least: \n"+
+                              "8-20 characters, 1 special character,\n"+
+                              "1 uppercase, 1 lowercase, and 1 number.";
+        Wrongpassword.setText(errorPassword);  
         isValid = false;
     }
     else {
