@@ -11,78 +11,104 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" stylesheets="@../Style/GeneralStyle.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.AddExpenseController">
    <top>
-      <MenuBar BorderPane.alignment="CENTER">
-        <menus>
-          <Menu mnemonicParsing="false" text="Log Out">
-            <items>
-              <MenuItem mnemonicParsing="false" text="Sign Off" />
-            </items>
-          </Menu>
-        </menus>
-         <cursor>
-            <Cursor fx:constant="HAND" />
-         </cursor>
-      </MenuBar>
+      <VBox BorderPane.alignment="CENTER">
+         <children>
+            <MenuBar>
+              <menus>
+                <Menu mnemonicParsing="false" text="Log Out">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="Sign Off" />
+                  </items>
+                </Menu>
+              </menus>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </MenuBar>
+            <AnchorPane prefHeight="107.0" prefWidth="800.0">
+               <children>
+                  <GridPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints maxHeight="77.0" minHeight="10.0" prefHeight="77.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="root" text="New Expense">
+                           <font>
+                              <Font size="35.0" />
+                           </font>
+                           <GridPane.margin>
+                              <Insets left="20.0" />
+                           </GridPane.margin>
+                        </Text>
+                        <Circle fx:id="circleImage" fill="DODGERBLUE" radius="37.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="4.0" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.valignment="CENTER">
+                           <GridPane.margin>
+                              <Insets right="25.0" top="10.0" />
+                           </GridPane.margin>
+                        </Circle>
+                        <Label fx:id="nameAddExpense" text="Label" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
+                           <GridPane.margin>
+                              <Insets right="45.0" />
+                           </GridPane.margin>
+                        </Label>
+                     </children>
+                  </GridPane>
+               </children>
+            </AnchorPane>
+         </children>
+      </VBox>
    </top>
    <center>
-      <GridPane alignment="CENTER" prefHeight="368.0" prefWidth="600.0">
+      <GridPane alignment="CENTER" prefHeight="400.0" prefWidth="600.0">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" maxWidth="132.0" minWidth="10.0" prefWidth="103.0" />
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="170.0" minWidth="10.0" />
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="131.0" minWidth="10.0" prefWidth="94.0" />
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="170.0" minWidth="10.0" />
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="102.0" minWidth="10.0" prefWidth="89.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="184.0" minWidth="10.0" prefWidth="184.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="131.0" minWidth="10.0" prefWidth="117.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="185.0" minWidth="10.0" prefWidth="185.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="128.0" minWidth="10.0" prefWidth="113.0" />
         </columnConstraints>
         <rowConstraints>
-            <RowConstraints maxHeight="118.0" minHeight="10.0" vgrow="SOMETIMES" />
           <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="144.0" minHeight="10.0" prefHeight="144.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="84.0" minHeight="10.0" prefHeight="72.0" vgrow="SOMETIMES" />
           <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="root" text="New Expense" GridPane.columnSpan="2" GridPane.halignment="LEFT" GridPane.valignment="TOP">
-               <font>
-                  <Font size="35.0" />
-               </font>
-               <GridPane.margin>
-                  <Insets top="20.0" />
-               </GridPane.margin>
-            </Text>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Title/Name: " GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Unit:  " GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="TOP" />
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Description: " GridPane.halignment="RIGHT" GridPane.rowIndex="3" GridPane.valignment="CENTER" />
-            <TextField fx:id="expenseTitle" promptText="Gass" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <TextField fx:id="expenseUnit" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="32.0" prefWidth="80.0" promptText="1 Unit" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.valignment="TOP" />
-            <TextArea fx:id="expenseDescription" prefHeight="91.0" prefWidth="170.0" promptText="Description about expense" GridPane.columnIndex="1" GridPane.rowIndex="3">
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="*Title/Name: " GridPane.halignment="RIGHT" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="*Unit:  " GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="TOP" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Description: &#10;(Optional)" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
+            <TextField fx:id="expenseTitle" promptText="Gass" GridPane.columnIndex="1" />
+            <TextField fx:id="expenseUnit" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" prefHeight="32.0" prefWidth="80.0" promptText="1 Unit" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.valignment="TOP" />
+            <TextArea fx:id="expenseDescription" maxHeight="-Infinity" prefHeight="60.0" prefWidth="170.0" promptText="Description about expense (optional)" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="2">
                <GridPane.margin>
                   <Insets top="10.0" />
                </GridPane.margin></TextArea>
-            <ImageView fx:id="profilePicture" fitHeight="70.0" fitWidth="84.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="4" GridPane.halignment="RIGHT">
-               <image>
-                  <Image url="@../Pictures/Standard_Profile_Picture.png" />
-               </image>
-            </ImageView>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Category: " GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="TOP" />
-            <DatePicker fx:id="datapicker" promptText="dd/mm/jjjj" GridPane.columnIndex="3" GridPane.rowIndex="1">
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="*Category: " GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="TOP" />
+            <DatePicker fx:id="datapicker" promptText="dd/mm/jjjj" GridPane.columnIndex="3">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
             </DatePicker>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Date: " GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
-            <Button fx:id="addCategory" mnemonicParsing="false" onAction="#addCategoryPressed" prefHeight="32.0" prefWidth="36.0" text="+" GridPane.columnIndex="4" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="TOP">
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="*Date: " GridPane.columnIndex="2" GridPane.halignment="RIGHT" />
+            <Button fx:id="addCategory" mnemonicParsing="false" onAction="#addCategoryPressed" prefHeight="32.0" prefWidth="53.0" text="+" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
@@ -90,28 +116,34 @@
                   <Insets left="10.0" />
                </GridPane.margin>
             </Button>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Receipt: " GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="3" GridPane.valignment="TOP" />
-            <Button fx:id="addFile" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#addFilePressed" text="Add File" GridPane.columnIndex="3" GridPane.rowIndex="3" GridPane.valignment="TOP" />
-            <Button fx:id="saveButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#saveButtonPressed" text="Save" GridPane.columnIndex="3" GridPane.rowIndex="4">
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="  Receipt: &#10;(Optional)" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
+            <Button fx:id="addFile" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#addFilePressed" text="Add File" GridPane.columnIndex="3" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
+            <Button fx:id="saveButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#saveButtonPressed" text="Save" GridPane.columnIndex="3" GridPane.rowIndex="3">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <Label fx:id="errorMessage" maxWidth="1.7976931348623157E308" prefHeight="59.0" prefWidth="140.0" GridPane.columnIndex="3" GridPane.rowIndex="3" GridPane.valignment="CENTER" />
-            <Button fx:id="removeCatgory" mnemonicParsing="false" onAction="#removeCategoryPressed" prefHeight="32.0" prefWidth="36.0" text="-" GridPane.columnIndex="4" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="TOP">
+            <Label fx:id="errorMessage" maxWidth="1.7976931348623157E308" prefHeight="80.0" prefWidth="185.0" wrapText="true" GridPane.columnIndex="3" GridPane.rowIndex="2" GridPane.rowSpan="2" GridPane.valignment="CENTER">
+               <GridPane.margin>
+                  <Insets top="35.0" />
+               </GridPane.margin></Label>
+            <Button fx:id="removeCatgory" mnemonicParsing="false" onAction="#removeCategoryPressed" prefHeight="32.0" prefWidth="51.0" text="-" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
                <GridPane.margin>
-                  <Insets />
+                  <Insets right="10.0" />
                </GridPane.margin>
             </Button>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Cost ($/£/€): " GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="BOTTOM" />
-            <TextField fx:id="expenseAmount" promptText="5000" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.valignment="BOTTOM" />
-            <ComboBox fx:id="chooseCategory" prefWidth="150.0" promptText="Select" GridPane.columnIndex="3" GridPane.rowIndex="2" GridPane.valignment="TOP" />
-            <Button fx:id="cancelButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#cancelButtonPressed" text="Cancel" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-            <Text fx:id="name" strokeType="OUTSIDE" strokeWidth="0.0" GridPane.columnIndex="4" GridPane.halignment="LEFT" GridPane.valignment="BOTTOM" />
-            <ImageView fx:id="receptPicture" fitHeight="150.0" fitWidth="170.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" GridPane.rowIndex="3" GridPane.valignment="BOTTOM" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="*Cost: " GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="BOTTOM" />
+            <TextField fx:id="expenseAmount" promptText="5000" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.valignment="BOTTOM" />
+            <ComboBox fx:id="chooseCategory" maxWidth="1.7976931348623157E308" prefWidth="150.0" promptText="Select" GridPane.columnIndex="3" GridPane.rowIndex="1" GridPane.valignment="TOP" />
+            <Button fx:id="cancelButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#cancelButtonPressed" text="Cancel" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <ImageView fx:id="receiptPicture" fitHeight="150.0" fitWidth="130.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="4" GridPane.rowIndex="2">
+               <GridPane.margin>
+                  <Insets left="10.0" right="10.0" />
+               </GridPane.margin>
+            </ImageView>
          </children>
       </GridPane>
    </center>

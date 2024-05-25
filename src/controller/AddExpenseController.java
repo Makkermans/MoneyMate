@@ -22,6 +22,8 @@ import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import model.Acount;
@@ -39,8 +41,6 @@ public class AddExpenseController implements Initializable {
     @FXML
     private TextArea expenseDescription;
     @FXML
-    private ImageView profilePicture;
-    @FXML
     private ComboBox<Category> chooseCategory;
     @FXML
     private Button addCategory;
@@ -55,28 +55,35 @@ public class AddExpenseController implements Initializable {
     @FXML
     private TextField expenseUnit;
     @FXML
-    private Button removeCategory;
-    @FXML
     private Button cancelButton;
     @FXML
-    private Text name;
+    private Circle circleImage;
     @FXML
-    private ImageView receptPicture;
-
+    private Label nameAddExpense;
     private String username;
+    @FXML
+    private ImageView receiptPicture;
+    
+    private Button removeCatgory;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         saveButton.disableProperty().bind(
             expenseTitle.textProperty().isEmpty()
             .or(expenseAmount.textProperty().isEmpty())
+            .or(expenseUnit.textProperty().isEmpty())
+            .or(datapicker.valueProperty().isNull())
+            .or(chooseCategory.valueProperty().isNull())
         );
 
         try {
             User currentUser = Acount.getInstance().getLoggedUser();
             if (currentUser != null) {
                 this.username = currentUser.getNickName();
-                name.setText(this.username);
+                nameAddExpense.setText(this.username); // Set the username in the TextField
+                if (currentUser.getImage() != null) {
+                    circleImage.setFill(new ImagePattern(currentUser.getImage()));  
+                }
             }
         } catch (AcountDAOException | IOException ex) {
             //Logger.getLogger(EditUserController.class.getName()).log(Level.SEVERE, null, ex);
@@ -158,7 +165,7 @@ public class AddExpenseController implements Initializable {
         File selectedFile = fileChooser.showOpenDialog(null);
         if (selectedFile != null) {
             Image image = new Image(selectedFile.toURI().toString());
-            receptPicture.setImage(image);
+            receiptPicture.setImage(image);  // Display the selected image
         }
     }
 
@@ -166,14 +173,30 @@ public class AddExpenseController implements Initializable {
     private void saveButtonPressed(ActionEvent event) {
         try {
             String title = expenseTitle.getText();
-            double amount = Double.parseDouble(expenseAmount.getText());
+            String amountStr = expenseAmount.getText();
+            String unitStr = expenseUnit.getText();
+            //double amount = Double.parseDouble(expenseAmount.getText());
             String description = expenseDescription.getText();
             Category category = chooseCategory.getValue();
-            Image image = receptPicture.getImage();
-            Integer unit = Integer.parseInt(expenseUnit.getText());
-            LocalDate date = datapicker.getValue();
+            Image image = receiptPicture.getImage();
+            LocalDate date = datapicker.getValue();   // This could also come from a DatePicker
+            
+            // Validate amount and unit
+            if (!isValidNumber(amountStr)) {
+                errorMessage.setText("Invalid cost. Please enter a valid number. Use a '.' instead of ',' for decimal costs");
+                return;
+            }
+            if (!isValidNumber(unitStr)) {
+                errorMessage.setText("Invalid unit. Please enter a valid number.");
+                return;
+            }
 
-            boolean saveSuccess = Acount.getInstance().registerCharge(title, description, amount, unit, image, date, category);
+            double amount = Double.parseDouble(amountStr);
+            int unit = Integer.parseInt(unitStr);
+
+            
+            boolean saveSuccess = Acount.getInstance().registerCharge(title, description, amount, unit, image, date, category);  // This method needs to be implemented
+
             if (saveSuccess) {
                 // Show success animation or message
                 Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
@@ -187,7 +210,7 @@ public class AddExpenseController implements Initializable {
                 expenseAmount.clear();
                 expenseDescription.clear();
                 chooseCategory.setValue(null);
-                receptPicture.setImage(null);
+                receiptPicture.setImage(null);
                 expenseUnit.clear();
                 datapicker.setValue(null);
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/Dashboard-view.fxml"));
@@ -257,4 +280,17 @@ private void removeCategoryPressed(ActionEvent event) {
             e.printStackTrace();
         }
     }
+    
+    // Helper method to validate if a string is a valid number
+    private boolean isValidNumber(String str) {
+        try {
+            Double.parseDouble(str);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+    
+
+
 }
