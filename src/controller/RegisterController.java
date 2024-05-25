@@ -22,6 +22,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -56,7 +57,8 @@ public class RegisterController implements Initializable {
     private PasswordField passwordField;
 
     
-    private Image profilePicture;
+    @FXML
+    private ImageView profilePicture;
 
     @FXML
     private Button editPictureButton;
@@ -76,6 +78,10 @@ public class RegisterController implements Initializable {
     private Label wrongPassword;
     @FXML
     private Circle circle;
+    @FXML
+    private TextField plainTextField;
+    @FXML
+    private CheckBox showPasswordCheckBox;
 
     /**
      * Initializes the controller class.
@@ -83,8 +89,9 @@ public class RegisterController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // Default Image
-        profilePicture = new Image("/Pictures/default.jpg");
-        circle.setFill(new ImagePattern(profilePicture));
+        Image defaultImage = new Image("/Pictures/default.jpg");
+         // Correctly setting an Image into an ImageView
+        circle.setFill(new ImagePattern(defaultImage)); 
         
         
         // Button Bindings
@@ -95,6 +102,19 @@ public class RegisterController implements Initializable {
         .or(emailField.textProperty().isEmpty())
         .or(passwordField.textProperty().isEmpty())
     );
+         plainTextField.setManaged(false);
+        plainTextField.setVisible(false);
+        plainTextField.managedProperty().bind(showPasswordCheckBox.selectedProperty());
+        plainTextField.visibleProperty().bind(showPasswordCheckBox.selectedProperty());
+
+        passwordField.managedProperty().bind(showPasswordCheckBox.selectedProperty().not());
+        passwordField.visibleProperty().bind(showPasswordCheckBox.selectedProperty().not());
+
+        // Bind the text properties together
+        plainTextField.textProperty().bindBidirectional(passwordField.textProperty());
+
+        // Handle checkbox action
+        showPasswordCheckBox.setOnAction(e -> handleCheckboxAction());
     }   
 
     @FXML
@@ -121,7 +141,7 @@ private void applyClicked(ActionEvent event) {
         String username = userField.getText();
         String password = passwordField.getText();
         String email = emailField.getText();
-        //Image image = profilePicture.getImage();
+        Image profilepic = profilePicture.getImage();
 
         // Validate data
         if (!validateData(username, password, email)) {
@@ -129,7 +149,7 @@ private void applyClicked(ActionEvent event) {
             return;
         }
         
-        boolean saveSuccess = Acount.getInstance().registerUser(name, surname, email, username, password, profilePicture, LocalDate.now());
+        boolean saveSuccess = Acount.getInstance().registerUser(name, surname, email, username, password, profilepic, LocalDate.now());
 
 
         if (saveSuccess) {
@@ -234,15 +254,24 @@ private boolean validateData(String nickname, String password, String email) thr
         if (file != null) {
             try {
                 String imagePath = file.toURI().toURL().toString();
-                profilePicture = new Image(imagePath);
-                //profilePicture.setImage(image); // Set the image in ImageView
-                circle.setFill(new ImagePattern(profilePicture));
+                Image image = new Image(imagePath); // Correctly creating an Image
+                profilePicture.setImage(image); // Correctly setting the Image into the ImageView
+                circle.setFill(new ImagePattern(image));
             } catch (MalformedURLException ex) {
                 System.err.println("Error loading image: "+ ex.getMessage());
                 // Handle exceptions possibly with a dialog
             }
         }
         
+    }
+
+    @FXML
+    private void handleCheckboxAction() {
+        if (showPasswordCheckBox.isSelected()) {
+        plainTextField.requestFocus();
+    } else {
+        passwordField.requestFocus();
+    }
     }
 
     

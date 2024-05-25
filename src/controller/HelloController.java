@@ -22,6 +22,7 @@ import model.Acount;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
+import javafx.scene.control.CheckBox;
 
 /**
  * FXML Controller class
@@ -43,9 +44,26 @@ public class HelloController implements Initializable {
     private TextField nameField;
     @FXML
     private Label incorrect;
+    @FXML
+    private TextField plainTextField;
+    @FXML
+    private CheckBox showPasswordCheckBox;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        plainTextField.setManaged(false);
+    plainTextField.setVisible(false);
+    plainTextField.managedProperty().bind(showPasswordCheckBox.selectedProperty());
+    plainTextField.visibleProperty().bind(showPasswordCheckBox.selectedProperty());
+
+    passwordField.managedProperty().bind(showPasswordCheckBox.selectedProperty().not());
+    passwordField.visibleProperty().bind(showPasswordCheckBox.selectedProperty().not());
+
+    // Bind the text properties together
+    plainTextField.textProperty().bindBidirectional(passwordField.textProperty());
+
+    // Handle checkbox action
+    showPasswordCheckBox.setOnAction(e -> handleCheckboxAction());
 
 
     }
@@ -86,6 +104,15 @@ public class HelloController implements Initializable {
             // Handle other exceptions such as network issues, configuration errors, etc.
             incorrect.setText("Login failed: Unable to connect. Please try again later.");
         }
+    }
+
+    @FXML
+    private void handleCheckboxAction() {
+        if (showPasswordCheckBox.isSelected()) {
+        plainTextField.requestFocus();
+    } else {
+        passwordField.requestFocus();
+    }
     }
 
 }
