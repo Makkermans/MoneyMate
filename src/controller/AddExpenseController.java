@@ -71,10 +71,11 @@ public class AddExpenseController implements Initializable {
     private Button cancelButton;
     @FXML
     private Circle circleImage;
-    private ImageView receiptImage;
     @FXML
     private Label nameAddExpense;
     private String username;
+    @FXML
+    private ImageView receiptPicture;
     
     //private Image profilePicture;
 
@@ -86,6 +87,9 @@ public class AddExpenseController implements Initializable {
         saveButton.disableProperty().bind(
             expenseTitle.textProperty().isEmpty()
             .or(expenseAmount.textProperty().isEmpty())
+            .or(expenseUnit.textProperty().isEmpty())
+            .or(datapicker.valueProperty().isNull())
+            .or(chooseCategory.valueProperty().isNull())
         );
         try {
             User currentUser = Acount.getInstance().getLoggedUser();
@@ -173,7 +177,7 @@ public class AddExpenseController implements Initializable {
         File selectedFile = fileChooser.showOpenDialog(null);
         if (selectedFile != null) {
             Image image = new Image(selectedFile.toURI().toString());
-            receiptImage.setImage(image);  // Display the selected image
+            receiptPicture.setImage(image);  // Display the selected image
         }
     }
 
@@ -181,14 +185,29 @@ public class AddExpenseController implements Initializable {
     private void saveButtonPressed(ActionEvent event) {
         try {
             String title = expenseTitle.getText();
-            double amount = Double.parseDouble(expenseAmount.getText());
+            String amountStr = expenseAmount.getText();
+            String unitStr = expenseUnit.getText();
+            //double amount = Double.parseDouble(expenseAmount.getText());
             String description = expenseDescription.getText();
             Category category = chooseCategory.getValue();
-            Image image = receiptImage.getImage();
+            Image image = receiptPicture.getImage();
             LocalDate date = datapicker.getValue();   // This could also come from a DatePicker
+            
+            // Validate amount and unit
+            if (!isValidNumber(amountStr)) {
+                errorMessage.setText("Invalid cost. Please enter a valid number. Use a '.' instead of ',' for decimal costs");
+                return;
+            }
+            if (!isValidNumber(unitStr)) {
+                errorMessage.setText("Invalid unit. Please enter a valid number.");
+                return;
+            }
+
+            double amount = Double.parseDouble(amountStr);
+            int unit = Integer.parseInt(unitStr);
 
             
-            boolean saveSuccess = Acount.getInstance().registerCharge(title, description, amount, 1, image, date, category);  // This method needs to be implemented
+            boolean saveSuccess = Acount.getInstance().registerCharge(title, description, amount, unit, image, date, category);  // This method needs to be implemented
 
             if (saveSuccess) {
                 
@@ -220,6 +239,15 @@ public class AddExpenseController implements Initializable {
         e.printStackTrace(); // Log the exception for debugging purposes.
         
     }
+    }
+    // Helper method to validate if a string is a valid number
+    private boolean isValidNumber(String str) {
+        try {
+            Double.parseDouble(str);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
     }
     
 
