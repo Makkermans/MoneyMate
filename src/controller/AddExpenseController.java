@@ -29,6 +29,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
 import model.Acount;
 import model.AcountDAOException;
@@ -50,8 +52,6 @@ public class AddExpenseController implements Initializable {
     @FXML
     private TextArea expenseDescription;
     @FXML
-    private ImageView profilePicture;
-    @FXML
     private ComboBox<Category> chooseCategory;
     @FXML
     private Button addCategory;
@@ -69,6 +69,14 @@ public class AddExpenseController implements Initializable {
     private Button removeCatgory;
     @FXML
     private Button cancelButton;
+    @FXML
+    private Circle circleImage;
+    @FXML
+    private Label username;
+    @FXML
+    private ImageView receiptImage;
+    
+    //private Image profilePicture;
 
     /**
      * Initializes the controller class.
@@ -82,7 +90,7 @@ public class AddExpenseController implements Initializable {
         try {
             User currentUser = Acount.getInstance().getLoggedUser();
             if (currentUser.getImage() != null) {
-                profilePicture.setImage(currentUser.getImage());  
+                circleImage.setFill(new ImagePattern(currentUser.getImage()));  
             }
         } catch (AcountDAOException | IOException ex) {
             Logger.getLogger(editUserController.class.getName()).log(Level.SEVERE, null, ex); 
@@ -161,7 +169,7 @@ public class AddExpenseController implements Initializable {
         File selectedFile = fileChooser.showOpenDialog(null);
         if (selectedFile != null) {
             Image image = new Image(selectedFile.toURI().toString());
-            profilePicture.setImage(image);  // Display the selected image
+            receiptImage.setImage(image);  // Display the selected image
         }
     }
 
@@ -172,7 +180,7 @@ public class AddExpenseController implements Initializable {
             double amount = Double.parseDouble(expenseAmount.getText());
             String description = expenseDescription.getText();
             Category category = chooseCategory.getValue();
-            Image image = profilePicture.getImage();
+            Image image = receiptImage.getImage();
             LocalDate date = datapicker.getValue();   // This could also come from a DatePicker
 
             
