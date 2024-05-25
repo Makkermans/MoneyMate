@@ -21,23 +21,85 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="600.0" prefWidth="800.0" stylesheets="@../Style/GeneralStyleDashboard.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.DashboardController">
+<AnchorPane prefHeight="650.0" prefWidth="800.0" stylesheets="@../Style/GeneralStyleDashboard.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.DashboardController">
    <children>
       <BorderPane layoutX="315.0" layoutY="146.0" prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <top>
-            <MenuBar nodeOrientation="LEFT_TO_RIGHT" BorderPane.alignment="CENTER">
-              <menus>
-                <Menu mnemonicParsing="false" text="Log Out">
-                  <items>
-                    <MenuItem fx:id="SignOff" mnemonicParsing="false" onAction="#SignOffClicked" text="Sign Off" />
-                  </items>
-                </Menu>
-              </menus>
-            </MenuBar>
+            <VBox BorderPane.alignment="CENTER">
+               <children>
+                  <MenuBar nodeOrientation="LEFT_TO_RIGHT">
+                    <menus>
+                      <Menu mnemonicParsing="false" text="Log Out">
+                        <items>
+                          <MenuItem fx:id="SignOff" mnemonicParsing="false" onAction="#SignOffClicked" text="Sign Off" />
+                        </items>
+                      </Menu>
+                    </menus>
+                  </MenuBar>
+                  <AnchorPane prefHeight="107.0" prefWidth="800.0">
+                     <children>
+                        <GridPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                          <columnConstraints>
+                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints maxHeight="77.0" minHeight="10.0" prefHeight="77.0" vgrow="SOMETIMES" />
+                            <RowConstraints maxHeight="77.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                          </rowConstraints>
+                           <children>
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="root" text="HOME" GridPane.columnSpan="2">
+                                 <font>
+                                    <Font size="50.0" />
+                                 </font>
+                                 <GridPane.margin>
+                                    <Insets left="20.0" top="10.0" />
+                                 </GridPane.margin>
+                              </Text>
+                              <Circle fx:id="circleImage" fill="DODGERBLUE" radius="37.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="4.0" GridPane.columnIndex="1" GridPane.halignment="RIGHT">
+                                 <GridPane.margin>
+                                    <Insets right="20.0" top="5.0" />
+                                 </GridPane.margin>
+                              </Circle>
+                              <ImageView fx:id="changeUser" fitHeight="42.0" fitWidth="34.0" onMouseClicked="#changeUserPressed" pickOnBounds="true" preserveRatio="true" rotate="270.0" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.valignment="BOTTOM">
+                                 <image>
+                                    <Image url="@../Pictures/Edit_Pencil.png" />
+                                 </image>
+                                 <GridPane.margin>
+                                    <Insets left="10.0" right="80.0" />
+                                 </GridPane.margin>
+                                 <effect>
+                                    <ColorAdjust brightness="-1.0" contrast="-1.0" hue="1.0" saturation="1.0" />
+                                 </effect>
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                              </ImageView>
+                              <Label fx:id="nameDashboard" text="Big D" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
+                                 <font>
+                                    <Font name="System Bold" size="18.0" />
+                                 </font>
+                                 <GridPane.margin>
+                                    <Insets right="35.0" />
+                                 </GridPane.margin>
+                              </Label>
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Monthly Expense: " GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
+                              <Label fx:id="monthlyExpense" text="\$$$" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                                 <GridPane.margin>
+                                    <Insets left="20.0" />
+                                 </GridPane.margin>
+                              </Label>
+                           </children>
+                        </GridPane>
+                     </children>
+                  </AnchorPane>
+               </children>
+            </VBox>
          </top>
          <center>
             <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
@@ -50,31 +112,22 @@
                       <ColumnConstraints hgrow="SOMETIMES" maxWidth="553.0" minWidth="10.0" prefWidth="174.0" />
                     </columnConstraints>
                     <rowConstraints>
-                      <RowConstraints maxHeight="163.0" minHeight="10.0" prefHeight="84.0" vgrow="SOMETIMES" />
                         <RowConstraints maxHeight="318.0" minHeight="10.0" prefHeight="28.0" vgrow="SOMETIMES" />
                       <RowConstraints maxHeight="380.0" minHeight="10.0" prefHeight="372.0" vgrow="SOMETIMES" />
                       <RowConstraints maxHeight="92.0" minHeight="10.0" prefHeight="46.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="root" text="HOME" GridPane.columnSpan="2">
-                           <font>
-                              <Font size="50.0" />
-                           </font>
-                           <GridPane.margin>
-                              <Insets left="20.0" top="10.0" />
-                           </GridPane.margin>
-                        </Text>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Recent Expenses: " GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Recent Expenses: " GridPane.valignment="BOTTOM">
                            <GridPane.margin>
                               <Insets left="20.0" />
                            </GridPane.margin>
                         </Text>
-                        <Label fx:id="allExpenses" onMouseClicked="#allExpensesClicked" text="See All &gt;" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
+                        <Label fx:id="allExpenses" onMouseClicked="#allExpensesClicked" text="See All &gt;" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.valignment="BOTTOM">
                            <cursor>
                               <Cursor fx:constant="HAND" />
                            </cursor>
                         </Label>
-                        <TableView fx:id="expenseTable" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="2" GridPane.rowIndex="2">
+                        <TableView fx:id="expenseTable" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="2" GridPane.rowIndex="1">
                           <columns>
                             <TableColumn fx:id="nameColumn" prefWidth="75.0" text="Name" />
                             <TableColumn fx:id="dateColumn" prefWidth="86.0" text="Date" />
@@ -88,20 +141,12 @@
                               <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                            </columnResizePolicy>
                         </TableView>
-                        <Button fx:id="addExpense" mnemonicParsing="false" onAction="#addExpenseClicked" prefHeight="31.0" prefWidth="143.0" text="Add Expense" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
+                        <Button fx:id="addExpense" mnemonicParsing="false" onAction="#addExpenseClicked" prefHeight="31.0" prefWidth="143.0" text="Add Expense" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
                            <cursor>
                               <Cursor fx:constant="HAND" />
                            </cursor>
                         </Button>
-                        <Label fx:id="nameDashboard" text="Big D" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="TOP">
-                           <font>
-                              <Font name="System Bold" size="18.0" />
-                           </font>
-                           <GridPane.margin>
-                              <Insets right="40.0" />
-                           </GridPane.margin>
-                        </Label>
-                        <BarChart fx:id="expenseChart" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.rowSpan="2">
+                        <BarChart fx:id="expenseChart" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.rowSpan="2">
                           <xAxis>
                             <CategoryAxis side="BOTTOM" />
                           </xAxis>
@@ -112,33 +157,14 @@
                               <Insets left="10.0" />
                            </GridPane.margin>
                         </BarChart>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Monthly Expense: " GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.valignment="BOTTOM" />
-                        <Label fx:id="monthlyExpense" text="\$$$" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.valignment="BOTTOM">
-                           <GridPane.margin>
-                              <Insets left="20.0" />
-                           </GridPane.margin>
-                        </Label>
-                        <ComboBox fx:id="selectFilter" prefWidth="150.0" promptText="Select Filter" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
-                        <Circle fx:id="circleImage" fill="DODGERBLUE" radius="47.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="4.0" GridPane.columnIndex="3" GridPane.halignment="RIGHT">
-                           <GridPane.margin>
-                              <Insets right="20.0" top="5.0" />
-                           </GridPane.margin>
-                        </Circle>
-                        <ImageView fx:id="changeUser" fitHeight="42.0" fitWidth="34.0" onMouseClicked="#changeUserPressed" pickOnBounds="true" preserveRatio="true" rotate="-90.0" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.valignment="BOTTOM">
-                           <image>
-                              <Image url="@../Pictures/Edit_Pencil.png" />
-                           </image>
-                           <GridPane.margin>
-                              <Insets left="10.0" right="100.0" />
-                           </GridPane.margin>
-                           <effect>
-                              <ColorAdjust brightness="-1.0" contrast="-1.0" hue="1.0" saturation="1.0" />
-                           </effect>
+                        <ComboBox fx:id="selectFilter" prefWidth="150.0" promptText="Select Filter" GridPane.columnIndex="2" GridPane.halignment="RIGHT">
                            <cursor>
                               <Cursor fx:constant="HAND" />
-                           </cursor>
-                        </ImageView>
-                        <Button fx:id="deleteExpense" mnemonicParsing="false" onAction="#deleteExpenseClicked" prefHeight="31.0" prefWidth="143.0" text="Delete Expense" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
+                           </cursor></ComboBox>
+                        <Button fx:id="deleteExpense" mnemonicParsing="false" onAction="#deleteExpenseClicked" prefHeight="31.0" prefWidth="143.0" text="Delete Expense" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor></Button>
                      </children>
                   </GridPane>
                </children>
