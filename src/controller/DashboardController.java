@@ -102,6 +102,19 @@ public class DashboardController implements Initializable {
             }
         });
         amountColumn.setCellValueFactory(new PropertyValueFactory<>("cost"));
+        amountColumn.setCellFactory(column -> new TableCell<Charge, Double>() {
+        @Override
+        protected void updateItem(Double item, boolean empty) {
+            super.updateItem(item, empty);
+            if (empty || item == null) {
+                setText(null);
+            } else {
+                Charge charge = getTableView().getItems().get(getIndex());
+                double totalCost = charge.getCost() * charge.getUnits();
+                setText(String.format("€%.2f", totalCost));
+            }
+        }
+    });
 
         try {
             User currentUser = Acount.getInstance().getLoggedUser();
@@ -133,7 +146,7 @@ public class DashboardController implements Initializable {
         LocalDate now = LocalDate.now();
         double total = chargeData.stream()
             .filter(charge -> charge.getDate().getMonth() == now.getMonth() && charge.getDate().getYear() == now.getYear())
-            .mapToDouble(Charge::getCost)
+            .mapToDouble(charge -> charge.getCost() * charge.getUnits())
             .sum();
         monthlyExpense.setText(String.format("€%.2f", total));
     }

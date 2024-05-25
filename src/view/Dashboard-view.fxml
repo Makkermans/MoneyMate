@@ -78,8 +78,8 @@
                           <columns>
                             <TableColumn fx:id="nameColumn" prefWidth="75.0" text="Name" />
                             <TableColumn fx:id="dateColumn" prefWidth="86.0" text="Date" />
-                              <TableColumn fx:id="categoryColumn" prefWidth="119.0" text="Category" />
-                              <TableColumn fx:id="amountColumn" prefWidth="75.0" text="Amount" />
+                              <TableColumn fx:id="categoryColumn" prefWidth="94.4000244140625" text="Category" />
+                              <TableColumn fx:id="amountColumn" prefWidth="101.5999755859375" text="Total Amount" />
                           </columns>
                            <GridPane.margin>
                               <Insets left="20.0" />
