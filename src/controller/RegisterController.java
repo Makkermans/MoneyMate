@@ -82,6 +82,10 @@ public class RegisterController implements Initializable {
     private TextField plainTextField;
     @FXML
     private CheckBox showPasswordCheckBox;
+    @FXML
+    private PasswordField passwordField2;
+    @FXML
+    private TextField plainTextField2;
 
     /**
      * Initializes the controller class.
@@ -101,6 +105,7 @@ public class RegisterController implements Initializable {
         .or(userField.textProperty().isEmpty())
         .or(emailField.textProperty().isEmpty())
         .or(passwordField.textProperty().isEmpty())
+        .or(passwordField2.textProperty().isEmpty())
     );
          plainTextField.setManaged(false);
         plainTextField.setVisible(false);
@@ -112,6 +117,15 @@ public class RegisterController implements Initializable {
 
         // Bind the text properties together
         plainTextField.textProperty().bindBidirectional(passwordField.textProperty());
+        
+        // Second password
+        plainTextField2.setManaged(false);
+        plainTextField2.setVisible(false);
+        plainTextField2.managedProperty().bind(showPasswordCheckBox.selectedProperty());
+        plainTextField2.visibleProperty().bind(showPasswordCheckBox.selectedProperty());
+        passwordField2.managedProperty().bind(showPasswordCheckBox.selectedProperty().not());
+        passwordField2.visibleProperty().bind(showPasswordCheckBox.selectedProperty().not());
+        plainTextField2.textProperty().bindBidirectional(passwordField2.textProperty());
 
         // Handle checkbox action
         showPasswordCheckBox.setOnAction(e -> handleCheckboxAction());
@@ -197,6 +211,9 @@ private boolean validateData(String nickname, String password, String email) thr
                               "1 uppercase, 1 lowercase, and 1 number.";
         wrongPassword.setText(errorPassword);        
         isValid = false;
+    } else if (!password.equals(passwordField2.getText())) { // Check if passwords match
+        wrongPassword.setText("Passwords do not match.");
+        isValid = false;
     } else {
         wrongPassword.setText("");
     }
@@ -269,8 +286,10 @@ private boolean validateData(String nickname, String password, String email) thr
     private void handleCheckboxAction() {
         if (showPasswordCheckBox.isSelected()) {
         plainTextField.requestFocus();
+        plainTextField2.requestFocus();
     } else {
         passwordField.requestFocus();
+        passwordField2.requestFocus();
     }
     }
 
