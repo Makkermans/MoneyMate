@@ -62,7 +62,7 @@
                               <Insets right="25.0" top="10.0" />
                            </GridPane.margin>
                         </Circle>
-                        <Label fx:id="username" text="Label" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
+                        <Label fx:id="nameAddExpense" text="Label" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
                            <GridPane.margin>
                               <Insets right="45.0" />
                            </GridPane.margin>

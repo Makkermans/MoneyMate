@@ -71,10 +71,10 @@ public class AddExpenseController implements Initializable {
     private Button cancelButton;
     @FXML
     private Circle circleImage;
-    @FXML
-    private Label username;
-    @FXML
     private ImageView receiptImage;
+    @FXML
+    private Label nameAddExpense;
+    private String username;
     
     //private Image profilePicture;
 
@@ -89,8 +89,12 @@ public class AddExpenseController implements Initializable {
         );
         try {
             User currentUser = Acount.getInstance().getLoggedUser();
-            if (currentUser.getImage() != null) {
-                circleImage.setFill(new ImagePattern(currentUser.getImage()));  
+            if (currentUser != null) {
+                this.username = currentUser.getNickName();
+                nameAddExpense.setText(this.username); // Set the username in the TextField
+                if (currentUser.getImage() != null) {
+                    circleImage.setFill(new ImagePattern(currentUser.getImage()));  
+                }
             }
         } catch (AcountDAOException | IOException ex) {
             Logger.getLogger(editUserController.class.getName()).log(Level.SEVERE, null, ex); 
