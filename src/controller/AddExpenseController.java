@@ -19,19 +19,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TextInputDialog;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.paint.ImagePattern;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import model.Acount;
@@ -40,11 +30,6 @@ import model.Category;
 import model.Charge;
 import model.User;
 
-/**
- * FXML Controller class
- *
- * @author thoma
- */
 public class AddExpenseController implements Initializable {
 
     @FXML
@@ -70,113 +55,110 @@ public class AddExpenseController implements Initializable {
     @FXML
     private TextField expenseUnit;
     @FXML
-    private Button removeCatgory;
+    private Button removeCategory;
     @FXML
     private Button cancelButton;
     @FXML
     private Text name;
-    
-    private String username;
     @FXML
     private ImageView receptPicture;
 
-    /**
-     * Initializes the controller class.
-     */
+    private String username;
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         saveButton.disableProperty().bind(
             expenseTitle.textProperty().isEmpty()
             .or(expenseAmount.textProperty().isEmpty())
         );
-       try {
+
+        try {
             User currentUser = Acount.getInstance().getLoggedUser();
             if (currentUser != null) {
                 this.username = currentUser.getNickName();
                 name.setText(this.username);
-                if (currentUser.getImage() != null) {
-                    //circleImage.setFill(new ImagePattern(currentUser.getImage()));
-                }
-                
             }
         } catch (AcountDAOException | IOException ex) {
-            Logger.getLogger(editUserController.class.getName()).log(Level.SEVERE, null, ex); 
+            //Logger.getLogger(EditUserController.class.getName()).log(Level.SEVERE, null, ex);
+            errorMessage.setText("Failed to load user details.");
         }
-        // Attempt to load categories
+
+        // Setting up the ComboBox with a cell factory
+        chooseCategory.setCellFactory(lv -> new ListCell<Category>() {
+            @Override
+            protected void updateItem(Category item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty ? null : item.getName());
+            }
+        });
+
+        chooseCategory.setButtonCell(new ListCell<Category>() {
+            @Override
+            protected void updateItem(Category item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty ? null : item.getName());
+            }
+        });
+
         try {
-            List<Category> categories = Acount.getInstance().getUserCategories(); // Fetch categories
+            List<Category> categories = Acount.getInstance().getUserCategories();
             if (categories != null) {
-                chooseCategory.getItems().clear(); // Clear existing items to avoid duplication on refreshes
-                chooseCategory.getItems().addAll(categories); // Correctly add all fetched categories at once
+                chooseCategory.getItems().clear();
+                chooseCategory.getItems().addAll(categories);
             }
         } catch (Exception ex) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, null, ex);
             errorMessage.setText("Failed to load categories.");
         }
     }
-    
-    
 
     @FXML
     private void addCategoryPressed(ActionEvent event) {
-    // Dialog for category name
-    TextInputDialog nameDialog = new TextInputDialog();
-    nameDialog.setTitle("Add Category");
-    nameDialog.setHeaderText("New Category");
-    nameDialog.setContentText("Please enter the category name:");
-    Optional<String> nameResult = nameDialog.showAndWait();
+        TextInputDialog nameDialog = new TextInputDialog("Category Name");
+        nameDialog.setTitle("Add Category");
+        nameDialog.setHeaderText("Create New Category");
+        nameDialog.setContentText("Please enter the category name:");
+        Optional<String> nameResult = nameDialog.showAndWait();
 
-    // Dialog for category description
-    TextInputDialog descDialog = new TextInputDialog();
-    descDialog.setTitle("Add Category Description");
-    descDialog.setHeaderText("New Category Description");
-    descDialog.setContentText("Please enter the category description:");
-    Optional<String> descResult = descDialog.showAndWait();
+        TextInputDialog descDialog = new TextInputDialog("Category Description");
+        descDialog.setTitle("Add Category Description");
+        descDialog.setHeaderText("Describe the Category");
+        descDialog.setContentText("Please enter the category description:");
+        Optional<String> descResult = descDialog.showAndWait();
 
-    if (nameResult.isPresent() && descResult.isPresent()) {
-    String name = nameResult.get();
-    String description = descResult.get();
-
-    // Optionally save new category to database
-    try {
-        if (Acount.getInstance().registerCategory(name, description)) {
-            System.out.println("New category added to database successfully.");
-
-            // Fetch the list of categories from the database
-            List<Category> categories = Acount.getInstance().getUserCategories();
-            if (categories != null) {
-                // Find the newly added category by name (assuming names are unique)
-                Optional<Category> newCategory = categories.stream()
-                    .filter(c -> c.getName().equals(name) && c.getDescription().equals(description))
-                    .findFirst();
-
-                // Check if the new category is found
-                if (newCategory.isPresent()) {
-                    // Add new category to the ChoiceBox for display.
-                    chooseCategory.getItems().add(newCategory.get());
-                    chooseCategory.setValue(newCategory.get()); // Set the newly added category as the selected one.
+        if (nameResult.isPresent() && descResult.isPresent()) {
+            String name = nameResult.get();
+            String description = descResult.get();
+            try {
+                if (Acount.getInstance().registerCategory(name, description)) {
+                    System.out.println("Category added successfully.");
+                    List<Category> categories = Acount.getInstance().getUserCategories();
+                    Optional<Category> newCategory = categories.stream()
+                        .filter(c -> c.getName().equals(name))
+                        .findFirst();
+                    if (newCategory.isPresent()) {
+                        chooseCategory.getItems().add(newCategory.get());
+                        chooseCategory.setValue(newCategory.get());
+                    }
                 } else {
-                    System.out.println("New category registered but not found.");
+                    System.out.println("Failed to add category.");
                 }
+            } catch (Exception e) {
+                System.out.println("Error adding category: " + e.getMessage());
             }
-        } else {
-            System.out.println("Failed to add new category to database.");
         }
-    } catch (Exception e) {
-        System.out.println("Error saving new category: " + e.getMessage());
     }
-}
-    }
+
     @FXML
     private void addFilePressed(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Select Image File");
+        fileChooser.setTitle("Select File");
         fileChooser.getExtensionFilters().addAll(
             new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg", "*.gif"));
         File selectedFile = fileChooser.showOpenDialog(null);
         if (selectedFile != null) {
             Image image = new Image(selectedFile.toURI().toString());
-            receptPicture.setImage(image);  // Display the selected image
+            receptPicture.setImage(image);
         }
     }
 
@@ -189,13 +171,10 @@ public class AddExpenseController implements Initializable {
             Category category = chooseCategory.getValue();
             Image image = receptPicture.getImage();
             Integer unit = Integer.parseInt(expenseUnit.getText());
-            LocalDate date = datapicker.getValue();   // This could also come from a DatePicker
+            LocalDate date = datapicker.getValue();
 
-            
-            boolean saveSuccess = Acount.getInstance().registerCharge(title, description, amount, unit, image, date, category);  // This method needs to be implemented
-
+            boolean saveSuccess = Acount.getInstance().registerCharge(title, description, amount, unit, image, date, category);
             if (saveSuccess) {
-                
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/Dashboard-view.fxml"));
                 Parent root = fxmlLoader.load();
                 MoneyMateApplication.setRoot(root);
@@ -206,8 +185,6 @@ public class AddExpenseController implements Initializable {
             errorMessage.setText("An error occurred. Please check input data.");
             ex.printStackTrace();
         }
-        
-    
     }
 
     @FXML
@@ -219,14 +196,18 @@ private void removeCategoryPressed(ActionEvent event) {
         Alert confirmationDialog = new Alert(Alert.AlertType.CONFIRMATION);
         confirmationDialog.setTitle("Confirm Delete");
         confirmationDialog.setHeaderText("Delete Category and Related Charges");
-        String contentText = "Are you sure you want to delete the category '" + selectedCategory.getName() + "' and all related charges? This action cannot be undone.";
+        
+        // Set custom text with wrapping
+        String contentText = "Are you sure you want to delete the category '" + selectedCategory.getName() + 
+                             "' and all related charges? This action cannot be undone.";
         Label label = new Label(contentText);
         label.setWrapText(true);  // Enable text wrapping within the label
         label.setMinHeight(Label.USE_PREF_SIZE);  // Ensure the label size is based on content
         confirmationDialog.getDialogPane().setContent(label);
 
         // Optionally set the minimum width of the dialog
-        confirmationDialog.getDialogPane().setMinWidth(400);
+        confirmationDialog.getDialogPane().setMinWidth(400);  // Adjust width as needed
+
         Optional<ButtonType> result = confirmationDialog.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
             try {
@@ -254,15 +235,11 @@ private void removeCategoryPressed(ActionEvent event) {
     @FXML
     private void cancelButtonPressed(ActionEvent event) {
         try {
-        FXMLLoader fxmlloader = new FXMLLoader(getClass().getResource("/view/Dashboard-view.fxml"));
-        Parent root = fxmlloader.load();
-        MoneyMateApplication.setRoot(root);
-    } catch (Exception e) {
-        e.printStackTrace(); // Log the exception for debugging purposes.
-        
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/Dashboard-view.fxml"));
+            Parent root = fxmlLoader.load();
+            MoneyMateApplication.setRoot(root);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
-    }
-    
-
-
 }
