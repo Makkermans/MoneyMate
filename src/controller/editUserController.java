@@ -22,6 +22,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.PasswordField;
@@ -60,6 +61,10 @@ public class editUserController implements Initializable {
     private Image profilePicture;
     @FXML
     private MenuItem logoutButton;
+    @FXML
+    private TextField plainTextField;
+    @FXML
+    private CheckBox showPasswordCheckBox;
 
     @Override
 public void initialize(URL url, ResourceBundle rb) {
@@ -86,6 +91,19 @@ public void initialize(URL url, ResourceBundle rb) {
         Logger.getLogger(editUserController.class.getName()).log(Level.SEVERE, null, ex);
         
     }
+    plainTextField.setManaged(false);
+    plainTextField.setVisible(false);
+    plainTextField.managedProperty().bind(showPasswordCheckBox.selectedProperty());
+    plainTextField.visibleProperty().bind(showPasswordCheckBox.selectedProperty());
+
+    passwordField.managedProperty().bind(showPasswordCheckBox.selectedProperty().not());
+    passwordField.visibleProperty().bind(showPasswordCheckBox.selectedProperty().not());
+
+    // Bind the text properties together
+    plainTextField.textProperty().bindBidirectional(passwordField.textProperty());
+
+    // Handle checkbox action
+    showPasswordCheckBox.setOnAction(e -> handleCheckboxAction());
 }
 
     
@@ -252,6 +270,15 @@ private boolean validateData(String password, String email) {
     } catch (Exception e) {
         e.printStackTrace(); // Log the exception for debugging purposes.
         // Consider displaying an error message to the user or logging the error more formally.
+    }
+    }
+
+    @FXML
+    private void handleCheckboxAction() {
+        if (showPasswordCheckBox.isSelected()) {
+        plainTextField.requestFocus();
+    } else {
+        passwordField.requestFocus();
     }
     }
     
