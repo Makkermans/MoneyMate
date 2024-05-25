@@ -8,6 +8,7 @@ package controller;
 import application.MoneyMateApplication;
 import com.sun.javafx.logging.PlatformLogger.Level;
 import java.io.File;
+import java.io.IOException;
 import java.lang.System.Logger;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -21,6 +22,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -32,6 +34,7 @@ import javafx.stage.FileChooser;
 import model.Persona;
 import model.User;
 import model.Acount;
+import model.AcountDAOException;
 
 /**
  * FXML Controller class
@@ -53,6 +56,7 @@ public class RegisterController implements Initializable {
     @FXML
     private PasswordField passwordField;
 
+    
     @FXML
     private ImageView profilePicture;
 
@@ -74,6 +78,14 @@ public class RegisterController implements Initializable {
     private Label wrongPassword;
     @FXML
     private Circle circle;
+    @FXML
+    private TextField plainTextField;
+    @FXML
+    private CheckBox showPasswordCheckBox;
+    @FXML
+    private PasswordField passwordField2;
+    @FXML
+    private TextField plainTextField2;
 
     /**
      * Initializes the controller class.
@@ -82,7 +94,8 @@ public class RegisterController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         // Default Image
         Image defaultImage = new Image("/Pictures/default.jpg");
-        circle.setFill(new ImagePattern(defaultImage));
+         // Correctly setting an Image into an ImageView
+        circle.setFill(new ImagePattern(defaultImage)); 
         
         
         // Button Bindings
@@ -92,7 +105,30 @@ public class RegisterController implements Initializable {
         .or(userField.textProperty().isEmpty())
         .or(emailField.textProperty().isEmpty())
         .or(passwordField.textProperty().isEmpty())
+        .or(passwordField2.textProperty().isEmpty())
     );
+         plainTextField.setManaged(false);
+        plainTextField.setVisible(false);
+        plainTextField.managedProperty().bind(showPasswordCheckBox.selectedProperty());
+        plainTextField.visibleProperty().bind(showPasswordCheckBox.selectedProperty());
+
+        passwordField.managedProperty().bind(showPasswordCheckBox.selectedProperty().not());
+        passwordField.visibleProperty().bind(showPasswordCheckBox.selectedProperty().not());
+
+        // Bind the text properties together
+        plainTextField.textProperty().bindBidirectional(passwordField.textProperty());
+        
+        // Second password
+        plainTextField2.setManaged(false);
+        plainTextField2.setVisible(false);
+        plainTextField2.managedProperty().bind(showPasswordCheckBox.selectedProperty());
+        plainTextField2.visibleProperty().bind(showPasswordCheckBox.selectedProperty());
+        passwordField2.managedProperty().bind(showPasswordCheckBox.selectedProperty().not());
+        passwordField2.visibleProperty().bind(showPasswordCheckBox.selectedProperty().not());
+        plainTextField2.textProperty().bindBidirectional(passwordField2.textProperty());
+
+        // Handle checkbox action
+        showPasswordCheckBox.setOnAction(e -> handleCheckboxAction());
     }   
 
     @FXML
@@ -119,15 +155,16 @@ private void applyClicked(ActionEvent event) {
         String username = userField.getText();
         String password = passwordField.getText();
         String email = emailField.getText();
-        Image image = profilePicture.getImage();
+        Image profilepic = profilePicture.getImage();
 
         // Validate data
         if (!validateData(username, password, email)) {
             System.out.println("Invalid input. Please check your data and try again.");
             return;
         }
+        
+        boolean saveSuccess = Acount.getInstance().registerUser(name, surname, email, username, password, profilepic, LocalDate.now());
 
-        boolean saveSuccess = Acount.getInstance().registerUser(name, surname, email, username, password, image, LocalDate.now());
 
         if (saveSuccess) {
             // Show success alert
@@ -164,36 +201,51 @@ private void navigateToLoginScreen() {
 }
 
 
-private boolean validateData(String nickname, String password, String email) {
-    // Validate password length
+private boolean validateData(String nickname, String password, String email) throws AcountDAOException, IOException {
+    boolean isValid = true;
+
+    // Validate password
     if (!User.checkPassword(password)) {
-        wrongPassword.setText("Password must be at least 6 characters long.");
-        return false;
-    }
-    else {
+        String errorPassword = "Password needs at least: \n"+
+                              "8-20 characters, 1 special character,\n"+
+                              "1 uppercase, 1 lowercase, and 1 number.";
+        wrongPassword.setText(errorPassword);        
+        isValid = false;
+    } else if (!password.equals(passwordField2.getText())) { // Check if passwords match
+        wrongPassword.setText("Passwords do not match.");
+        isValid = false;
+    } else {
         wrongPassword.setText("");
     }
 
     // Validate email format
     if (!User.checkEmail(email)) {
         wrongEmail.setText("Enter a valid email address.");
-        return false;
-    }
-    else {
+        isValid = false;
+    } else {
         wrongEmail.setText("");
     }
 
-    // Check if the nickname already exists in the database
+    // Validate username format
     if (!User.checkNickName(nickname)) {
-        wrongNickname.setText("Nickname already taken, please choose another.");
-        return false;
-    }
-    else {
-        wrongNickname.setText("");
+        String errorNicknameFormat = "Nickname must be 6-15 characters, \n" +
+                                     "and can include:\n" +
+                                     "letters, numbers, underscores, or hyphens.";
+        wrongNickname.setText(errorNicknameFormat);
+        isValid = false;
+    } else if (Acount.getInstance().existsLogin(nickname)) { // Check if username already exists
+        String errorNicknameExists = "Nickname already taken.\n" +
+                                     "Please choose another.";
+        wrongNickname.setText(errorNicknameExists);
+        isValid = false;
+} else {
+        wrongNickname.setText(""); // Clear previous errors if any
     }
 
-    return true;
+    return isValid;
 }
+
+
 
 
 
@@ -219,8 +271,8 @@ private boolean validateData(String nickname, String password, String email) {
         if (file != null) {
             try {
                 String imagePath = file.toURI().toURL().toString();
-                Image image = new Image(imagePath);
-                //profilePicture.setImage(image); // Set the image in ImageView
+                Image image = new Image(imagePath); // Correctly creating an Image
+                 // Correctly setting the Image into the ImageView
                 circle.setFill(new ImagePattern(image));
             } catch (MalformedURLException ex) {
                 System.err.println("Error loading image: "+ ex.getMessage());
@@ -228,6 +280,17 @@ private boolean validateData(String nickname, String password, String email) {
             }
         }
         
+    }
+
+    @FXML
+    private void handleCheckboxAction() {
+        if (showPasswordCheckBox.isSelected()) {
+        plainTextField.requestFocus();
+        plainTextField2.requestFocus();
+    } else {
+        passwordField.requestFocus();
+        passwordField2.requestFocus();
+    }
     }
 
     
