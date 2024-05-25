@@ -291,7 +291,7 @@ public class DashboardController implements Initializable {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("Delete Confirmation");
             alert.setHeaderText("Are you sure you want to delete this charge?");
-            alert.setContentText("Name: " + selectedCharge.getName() + "\nAmount: " + selectedCharge.getCost() + "\nCategory: " + selectedCharge.getCategory()  + "\nDate: " + selectedCharge.getDate());
+            alert.setContentText("Name: " + selectedCharge.getName() + "\nAmount: " + selectedCharge.getCost() + "\nCategory: " + selectedCharge.getCategory().getName()  + "\nDate: " + selectedCharge.getDate());
 
             if (alert.showAndWait().get() == ButtonType.OK) {
                 chargeData.remove(selectedCharge);

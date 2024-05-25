@@ -27,6 +27,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -40,6 +41,7 @@ import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
 import model.Acount;
 import model.AcountDAOException;
+import model.Category;
 import model.Charge;
 import model.User;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -72,7 +74,7 @@ public class OverviewExpenseController implements Initializable {
     @FXML
     private TableColumn<Charge, LocalDate> dateColumn;
     @FXML
-    private TableColumn<Charge, String> categoryColumn;
+    private TableColumn<Charge, Category> categoryColumn;
     @FXML
     private TextField search;
     @FXML
@@ -106,7 +108,14 @@ public class OverviewExpenseController implements Initializable {
         // Set up the cell value factories for the table columns
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         dateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
-        categoryColumn.setCellValueFactory(new PropertyValueFactory<>("category")); 
+        categoryColumn.setCellValueFactory(new PropertyValueFactory<>("category"));
+        categoryColumn.setCellFactory(column -> new TableCell<Charge, Category>() {
+            @Override
+            protected void updateItem(Category category, boolean empty) {
+                super.updateItem(category, empty);
+                setText(empty || category == null ? null : category.getName());
+            }
+        });
         amountColumn.setCellValueFactory(new PropertyValueFactory<>("cost"));
         unitsColumn.setCellValueFactory(new PropertyValueFactory<>("units"));
         try{
@@ -282,7 +291,7 @@ public class OverviewExpenseController implements Initializable {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("Delete Confirmation");
             alert.setHeaderText("Are you sure you want to delete this charge?");
-            alert.setContentText("Name: " + selectedCharge.getName() + "\nAmount: " + selectedCharge.getCost() + "\nCategory: " + selectedCharge.getCategory()  + "\nDate: " + selectedCharge.getDate());
+            alert.setContentText("Name: " + selectedCharge.getName() + "\nAmount: " + selectedCharge.getCost() + "\nCategory: " + selectedCharge.getCategory().getName()  + "\nDate: " + selectedCharge.getDate());
 
             if (alert.showAndWait().get() == ButtonType.OK) {
                 chargeData.remove(selectedCharge);
