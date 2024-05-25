@@ -169,16 +169,15 @@ private void navigateToLoginScreen() {
 
 private boolean validateData(String nickname, String password, String email) throws AcountDAOException, IOException {
     boolean isValid = true;
-    User user = Acount.getInstance().getLoggedUser();
-    // Validate password length
+
+    // Validate password
     if (!User.checkPassword(password)) {
         String errorPassword = "Password needs at least: \n"+
                               "8-20 characters, 1 special character,\n"+
                               "1 uppercase, 1 lowercase, and 1 number.";
-        wrongPassword.setText(errorPassword);
+        wrongPassword.setText(errorPassword);        
         isValid = false;
-    }
-    else {
+    } else {
         wrongPassword.setText("");
     }
 
@@ -186,23 +185,30 @@ private boolean validateData(String nickname, String password, String email) thr
     if (!User.checkEmail(email)) {
         wrongEmail.setText("Enter a valid email address.");
         isValid = false;
-    }
-    else {
+    } else {
         wrongEmail.setText("");
     }
-//|| !User.checkNickName(nickname)
-    // Check if the nickname already exists in the database
-    if (!User.checkNickName(nickname)  ) {
-        String errorNickname = "Nickname already taken \n" +
-                                "Please choose another.";
-        wrongNickname.setText(errorNickname);
+
+    // Validate username format
+    if (!User.checkNickName(nickname)) {
+        String errorNicknameFormat = "Nickname must be 6-15 characters, \n" +
+                                     "and can include:\n" +
+                                     "letters, numbers, underscores, or hyphens.";
+        wrongNickname.setText(errorNicknameFormat);
         isValid = false;
+    } else if (Acount.getInstance().existsLogin(nickname)) { // Check if username already exists
+        String errorNicknameExists = "Nickname already taken.\n" +
+                                     "Please choose another.";
+        wrongNickname.setText(errorNicknameExists);
+        isValid = false;
+} else {
+        wrongNickname.setText(""); // Clear previous errors if any
     }
-    else {
-        wrongNickname.setText("");
-    }
+
     return isValid;
 }
+
+
 
 
 
