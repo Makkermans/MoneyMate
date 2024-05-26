@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
@@ -54,7 +55,10 @@
             <TextField fx:id="userField" promptText="Username" GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.valignment="CENTER" />
             <TextField fx:id="emailField" promptText="Jose@upv.es" GridPane.columnIndex="1" GridPane.rowIndex="4" GridPane.valignment="CENTER" />
             <PasswordField fx:id="passwordField" promptText="Password" GridPane.columnIndex="1" GridPane.rowIndex="5" GridPane.valignment="CENTER" />
-            <Button fx:id="editPictureButton" mnemonicParsing="false" onAction="#editPictureClicked" text="Edit Picture" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="BOTTOM" />
+            <Button fx:id="editPictureButton" mnemonicParsing="false" onAction="#editPictureClicked" text="Edit Picture" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor></Button>
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Please complete your profile below" underline="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="BOTTOM">
                <font>
                   <Font name="Comic Sans MS Bold" size="15.0" />
@@ -84,6 +88,9 @@
                <padding>
                   <Insets left="10.0" />
                </padding>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
             </CheckBox>
             <Label text="Repeat Password:" GridPane.halignment="RIGHT" GridPane.rowIndex="6" GridPane.valignment="CENTER">
                <font>
@@ -118,8 +125,14 @@
                   <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
                </rowConstraints>
                <children>
-                  <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#cancelClicked" prefHeight="32.0" prefWidth="100.0" text="Cancel" GridPane.valignment="TOP" />
-                  <Button fx:id="confirmButton" mnemonicParsing="false" onAction="#applyClicked" prefHeight="32.0" prefWidth="100.0" text="Apply" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.valignment="TOP" />
+                  <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#cancelClicked" prefHeight="32.0" prefWidth="100.0" text="Cancel" GridPane.valignment="TOP">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor></Button>
+                  <Button fx:id="confirmButton" mnemonicParsing="false" onAction="#applyClicked" prefHeight="32.0" prefWidth="100.0" text="Apply" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.valignment="TOP">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor></Button>
                </children>
                <HBox.margin>
                   <Insets bottom="20.0" />
