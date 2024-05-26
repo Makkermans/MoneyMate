@@ -51,7 +51,7 @@
                             <RowConstraints maxHeight="77.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                           </rowConstraints>
                            <children>
-                              <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="root" text="Expenses">
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="title" text="Expenses">
                                  <font>
                                     <Font size="50.0" />
                                  </font>
@@ -59,12 +59,12 @@
                                     <Insets left="20.0" top="10.0" />
                                  </GridPane.margin>
                               </Text>
-                              <Label fx:id="username" text="Big D" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
+                              <Label fx:id="username" styleClass="username" text="Username" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
                                  <font>
                                     <Font name="System Bold" size="18.0" />
                                  </font>
                                  <GridPane.margin>
-                                    <Insets right="35.0" />
+                                    <Insets right="25.0" />
                                  </GridPane.margin>
                               </Label>
                               <Circle fx:id="circle" fill="DODGERBLUE" radius="37.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="4.0" GridPane.columnIndex="1" GridPane.halignment="RIGHT">

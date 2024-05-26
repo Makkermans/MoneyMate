@@ -26,7 +26,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="650.0" prefWidth="800.0" stylesheets="@../Style/GeneralStyleDashboard.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.DashboardController">
+<AnchorPane prefHeight="650.0" prefWidth="800.0" stylesheets="@../Style/GeneralStyle.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.DashboardController">
    <children>
       <BorderPane layoutX="315.0" layoutY="146.0" prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <top>
@@ -53,7 +53,7 @@
                             <RowConstraints maxHeight="77.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                           </rowConstraints>
                            <children>
-                              <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="root" text="HOME" GridPane.columnSpan="2">
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="title" text="HOME" GridPane.columnSpan="2">
                                  <font>
                                     <Font size="50.0" />
                                  </font>
@@ -80,12 +80,12 @@
                                     <Cursor fx:constant="HAND" />
                                  </cursor>
                               </ImageView>
-                              <Label fx:id="nameDashboard" text="Big D" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
+                              <Label fx:id="nameDashboard" styleClass="username" stylesheets="@../Style/GeneralStyle.css" text="Username" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
                                  <font>
                                     <Font name="System Bold" size="18.0" />
                                  </font>
                                  <GridPane.margin>
-                                    <Insets right="35.0" />
+                                    <Insets right="25.0" />
                                  </GridPane.margin>
                               </Label>
                               <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Monthly Expense: " GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
