@@ -22,7 +22,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" stylesheets="@../Style/GeneralStyle.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.AddExpenseController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="800.0" stylesheets="@../Style/GeneralStyle.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.AddExpenseController">
    <top>
       <VBox BorderPane.alignment="CENTER">
          <children>
@@ -55,7 +55,7 @@
                               <Font size="35.0" />
                            </font>
                            <GridPane.margin>
-                              <Insets left="20.0" />
+                              <Insets left="20.0" top="10.0" />
                            </GridPane.margin>
                         </Text>
                         <Circle fx:id="circleImage" fill="DODGERBLUE" radius="37.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="4.0" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.valignment="CENTER">
@@ -63,9 +63,9 @@
                               <Insets right="25.0" top="10.0" />
                            </GridPane.margin>
                         </Circle>
-                        <Label fx:id="nameAddExpense" text="Label" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
+                        <Label fx:id="nameAddExpense" text="username" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
                            <GridPane.margin>
-                              <Insets right="45.0" />
+                              <Insets right="30.0" />
                            </GridPane.margin>
                         </Label>
                      </children>
@@ -108,7 +108,7 @@
                </cursor>
             </DatePicker>
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="*Date: " GridPane.columnIndex="2" GridPane.halignment="RIGHT" />
-            <Button fx:id="addCategory" mnemonicParsing="false" onAction="#addCategoryPressed" prefHeight="32.0" prefWidth="53.0" text="+" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
+            <Button fx:id="addCategory" mnemonicParsing="false" onAction="#addCategoryPressed" prefHeight="32.0" prefWidth="69.0" text="Add" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
@@ -127,7 +127,7 @@
                <GridPane.margin>
                   <Insets top="35.0" />
                </GridPane.margin></Label>
-            <Button fx:id="removeCatgory" mnemonicParsing="false" onAction="#removeCategoryPressed" prefHeight="32.0" prefWidth="51.0" text="-" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
+            <Button fx:id="removeCatgory" mnemonicParsing="false" onAction="#removeCategoryPressed" prefHeight="32.0" prefWidth="69.0" text="Delete" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
@@ -144,6 +144,7 @@
                   <Insets left="10.0" right="10.0" />
                </GridPane.margin>
             </ImageView>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Edit Categories: " GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="BOTTOM" />
          </children>
       </GridPane>
    </center>
