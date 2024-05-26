@@ -30,12 +30,12 @@
          </columnConstraints>
          <rowConstraints>
             <RowConstraints maxHeight="70.0" minHeight="10.0" prefHeight="29.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="70.0" minHeight="10.0" prefHeight="58.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="70.0" minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="70.0" minHeight="10.0" prefHeight="58.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="70.0" minHeight="10.0" prefHeight="58.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="70.0" minHeight="10.0" prefHeight="58.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="70.0" minHeight="10.0" prefHeight="58.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="70.0" minHeight="10.0" prefHeight="55.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="70.0" minHeight="10.0" prefHeight="55.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="70.0" minHeight="10.0" prefHeight="55.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="70.0" minHeight="10.0" prefHeight="55.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="70.0" minHeight="10.0" prefHeight="55.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="70.0" minHeight="10.0" prefHeight="55.0" vgrow="SOMETIMES" />
          </rowConstraints>
          <children>
             <Label text="Name: " GridPane.halignment="RIGHT" GridPane.rowIndex="1">
@@ -87,7 +87,7 @@
                </GridPane.margin></Label>
             <Circle fx:id="circleImage" fill="DODGERBLUE" radius="70.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="4.0" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
             <TextField fx:id="plainTextField" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-            <CheckBox fx:id="showPasswordCheckBox" mnemonicParsing="false" onAction="#handleCheckboxAction" prefHeight="30.0" prefWidth="120.0" text="Show Password" GridPane.columnIndex="2" GridPane.rowIndex="5">
+            <CheckBox fx:id="showPasswordCheckBox" mnemonicParsing="false" onAction="#handleCheckboxAction" prefHeight="30.0" prefWidth="197.0" text="Show Password" GridPane.columnIndex="2" GridPane.rowIndex="5">
                <padding>
                   <Insets left="10.0" />
                </padding>
