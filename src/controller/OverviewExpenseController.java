@@ -14,13 +14,18 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -35,10 +40,13 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import model.Acount;
 import model.AcountDAOException;
 import model.Category;
@@ -201,60 +209,71 @@ public class OverviewExpenseController implements Initializable {
     
 
     @FXML
-    private void modifyButtonClicked(ActionEvent event) {
+private void modifyButtonClicked(ActionEvent event) {
     Charge selectedCharge = expenseTable.getSelectionModel().getSelectedItem();
-        if (selectedCharge != null) {
-            // Display the selected charge details in editable fields
-            TextField nameField = new TextField(selectedCharge.getName());
-            TextField costField = new TextField(String.valueOf(selectedCharge.getCost()));
-            TextField descriptionField = new TextField(selectedCharge.getDescription());
-            DatePicker datePicker = new DatePicker(selectedCharge.getDate());
-            TextField categoryField = new TextField(selectedCharge.getCategory().getName());
-            TextField unitsField = new TextField(String.valueOf(selectedCharge.getUnits()));
-            ImageView imageView = new ImageView(selectedCharge.getImageScan());
-            imageView.setFitHeight(100);
-            imageView.setFitWidth(100);
-            imageView.setPreserveRatio(true);
-            
-            
-            // Allow image change on click
-            imageView.setOnMouseClicked(event1 -> {
-                FileChooser fileChooser = new FileChooser();
-                fileChooser.getExtensionFilters().addAll(
-                    new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg")
-                );
-                File selectedFile = fileChooser.showOpenDialog(null);
-                if (selectedFile != null) {
-                    Image newImage = new Image(selectedFile.toURI().toString());
-                    imageView.setImage(newImage);
-                }
-            });
+    if (selectedCharge != null) {
+        final double LABEL_WIDTH = 100;
+        final double MAX_IMAGE_SIZE = 150; // Define a maximum size for the image
 
-            // Create a dialog for modification
-            VBox vbox = new VBox();
-            vbox.getChildren().addAll(
-                new Label("Name:"), nameField,
-                new Label("Category:"), categoryField,
-                new Label("Description:"), descriptionField,
-                new Label("Date:"), datePicker,
-                new Label("Cost:"), costField,
-                new Label("Units:"), unitsField,
-                new Label("Image:"), imageView
-                    
+        // Fields initialization
+        TextField nameField = new TextField(selectedCharge.getName());
+        TextField costField = new TextField(String.valueOf(selectedCharge.getCost()));
+        TextField descriptionField = new TextField(selectedCharge.getDescription());
+        DatePicker datePicker = new DatePicker(selectedCharge.getDate());
+        TextField categoryField = new TextField(selectedCharge.getCategory().getName());
+        TextField unitsField = new TextField(String.valueOf(selectedCharge.getUnits()));
+        Stream.of(nameField, costField, descriptionField, datePicker, categoryField, unitsField)
+              .forEach(field -> field.setMinWidth(200));
+
+        // Image view setup
+        ImageView imageView = new ImageView(selectedCharge.getImageScan());
+        imageView.setPreserveRatio(true);
+        imageView.setFitHeight(MAX_IMAGE_SIZE);
+        imageView.setFitWidth(MAX_IMAGE_SIZE);
+
+        // Change Image Button
+        Button changeImageButton = new Button("Change Image");
+        changeImageButton.setOnAction(e -> {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg")
             );
+            File selectedFile = fileChooser.showOpenDialog(null);
+            if (selectedFile != null) {
+                Image newImage = new Image(selectedFile.toURI().toString(), MAX_IMAGE_SIZE, MAX_IMAGE_SIZE, true, true);
+                imageView.setImage(newImage);
+            }
+        });
 
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Modify Charge");
-            alert.setHeaderText("Modify the details of the selected charge:");
-            alert.getDialogPane().setContent(vbox);
+        // Layout setup
+        HBox nameBox = createHBox("Name:", nameField, LABEL_WIDTH);
+        HBox categoryBox = createHBox("Category:", categoryField, LABEL_WIDTH);
+        HBox descriptionBox = createHBox("Description:", descriptionField, LABEL_WIDTH);
+        HBox dateBox = createHBox("Date:", datePicker, LABEL_WIDTH);
+        HBox costBox = createHBox("Cost:", costField, LABEL_WIDTH);
+        HBox unitsBox = createHBox("Units:", unitsField, LABEL_WIDTH);
+        HBox imageBox = new HBox(10, new Label("Image:"), imageView, changeImageButton);
+        ((Label)imageBox.getChildren().get(0)).setMinWidth(LABEL_WIDTH);
 
-            if (alert.showAndWait().get() == ButtonType.OK) {
-            // Validate and update the charge details
+        VBox mainContainer = new VBox(10, nameBox, categoryBox, descriptionBox, dateBox, costBox, unitsBox, imageBox);
+        mainContainer.setPadding(new Insets(15));
+
+        // Alert setup
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Modify Charge");
+        alert.setHeaderText("Modify the details of the selected charge:");
+        alert.getDialogPane().setContent(mainContainer);
+        alert.setResizable(true);
+
+        alert.getDialogPane().expandedProperty().addListener((observable, oldValue, newValue) -> {
+            alert.getDialogPane().requestLayout();
+            alert.getDialogPane().getScene().getWindow().sizeToScene();
+        });
+
+        // Show dialog and process results
+        if (alert.showAndWait().get() == ButtonType.OK) {
             try {
-                // Remove the old charge
                 Acount.getInstance().removeCharge(selectedCharge);
-
-                // Register the updated charge
                 Acount.getInstance().registerCharge(
                     nameField.getText(),
                     descriptionField.getText(),
@@ -264,24 +283,27 @@ public class OverviewExpenseController implements Initializable {
                     datePicker.getValue(),
                     selectedCharge.getCategory()
                 );
-
-                // Update the table view
                 loadData();
-
-            } catch (NumberFormatException e) {
-                showErrorMessage("Invalid input: " + e.getMessage());
-            } catch (AcountDAOException | IOException e) {
-                showErrorMessage("Failed to update the charge: " + e.getMessage());
+            } catch (NumberFormatException | IOException | AcountDAOException e) {
+                showErrorMessage("Error updating charge: " + e.getMessage());
             }
         }
     } else {
-        Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle("No Selection");
-        alert.setHeaderText("No Charge Selected");
-        alert.setContentText("Please select a charge in the table.");
-        alert.showAndWait();
+        showAlert("Warning", "No Charge Selected", "Please select a charge in the table.");
     }
-    }    
+}
+
+private HBox createHBox(String labelText, Node field, double labelWidth) {
+    Label label = new Label(labelText);
+    label.setMinWidth(labelWidth);
+    return new HBox(10, label, field);
+}
+
+
+
+
+
+
     
 
     @FXML
@@ -452,60 +474,88 @@ public class OverviewExpenseController implements Initializable {
     }
 
     @FXML
-    private void detailButtonClicked(ActionEvent event) {
-     Charge selectedCharge = expenseTable.getSelectionModel().getSelectedItem();
+private void detailButtonClicked(ActionEvent event) {
+    Charge selectedCharge = expenseTable.getSelectionModel().getSelectedItem();
     if (selectedCharge != null) {
-        // Display the selected charge details in non-editable fields
-        TextField nameField = new TextField(selectedCharge.getName());
-        nameField.setEditable(false);
-        TextField descriptionField = new TextField(selectedCharge.getDescription());
-        descriptionField.setEditable(false);
-        TextField costField = new TextField(String.valueOf(selectedCharge.getCost()));
-        costField.setEditable(false);
-        TextField unitsField = new TextField(String.valueOf(selectedCharge.getUnits()));
-        unitsField.setEditable(false);
+        // Setup fields and labels with non-editable configurations
+        TextField nameField = setupTextField(selectedCharge.getName(), false);
+        TextField costField = setupTextField(String.format("%.2f", selectedCharge.getCost()), false);
+        TextField descriptionField = setupTextField(selectedCharge.getDescription(), false);
         DatePicker datePicker = new DatePicker(selectedCharge.getDate());
         datePicker.setEditable(false);
-        TextField categoryField = new TextField(selectedCharge.getCategory().getName());
-        categoryField.setEditable(false);
-        
-        double totalAmount = selectedCharge.getUnits() * selectedCharge.getCost();
-        TextField totalAmountField = new TextField(String.valueOf(totalAmount));
-        totalAmountField.setEditable(false);
-        
+        TextField categoryField = setupTextField(selectedCharge.getCategory().getName(), false);
+        TextField unitsField = setupTextField(String.valueOf(selectedCharge.getUnits()), false);
 
-        
+        // Image view setup
         ImageView imageView = new ImageView(selectedCharge.getImageScan());
-        imageView.setFitHeight(100);
-        imageView.setFitWidth(100);
         imageView.setPreserveRatio(true);
-        
-        // Create a dialog for showing details
-        VBox vbox = new VBox();
-         // Add some spacing between elements
-        vbox.getChildren().addAll(
-                new Label("Name:"), nameField,
-                new Label("Category:"), categoryField,
-                new Label("Description:"), descriptionField,
-                new Label("Date:"), datePicker,
-                new Label("Cost:"), costField,
-                new Label("Units:"), unitsField,
-                new Label("Total Amount:"), totalAmountField,
-                new Label("Image:"), imageView
-        );
+        imageView.setFitHeight(150);
+        imageView.setFitWidth(150);
+        Button viewImageButton = new Button("View Larger Image");
+        viewImageButton.setOnAction(e -> openImageInNewWindow(selectedCharge.getImageScan()));
 
+        // Create HBox for each field
+        HBox nameBox = createHBox("Name:", nameField, 100);
+        HBox categoryBox = createHBox("Category:", categoryField, 100);
+        HBox descriptionBox = createHBox("Description:", descriptionField, 100);
+        HBox dateBox = createHBox("Date:", datePicker, 100);
+        HBox costBox = createHBox("Cost:", costField, 100);
+        HBox unitsBox = createHBox("Units:", unitsField, 100);
+        HBox imageBox = new HBox(10, new Label("Image:"), imageView, viewImageButton);
+        ((Label)imageBox.getChildren().get(0)).setMinWidth(100);
+
+        // Combine all HBoxes into a VBox
+        VBox mainContainer = new VBox(10, nameBox, categoryBox, descriptionBox, dateBox, costBox, unitsBox, imageBox);
+        mainContainer.setPadding(new Insets(15));
+
+        // Display the alert
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Expense Details");
         alert.setHeaderText("Details of the selected expense:");
-        alert.getDialogPane().setContent(vbox);
-
+        alert.getDialogPane().setContent(mainContainer);
         alert.showAndWait();
     } else {
-        Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle("No Selection");
-        alert.setHeaderText("No Charge Selected");
-        alert.setContentText("Please select a charge in the table.");
-        alert.showAndWait();
+        showAlert("Warning", "No Charge Selected", "Please select a charge in the table.");
     }
 }
+
+
+private TextField setupTextField(String text, boolean editable) {
+    TextField textField = new TextField(text);
+    textField.setEditable(editable);
+    return textField;
+}
+
+private void openImageInNewWindow(Image image) {
+    ImageView largerImageView = new ImageView(image);
+    largerImageView.setFitHeight(600);
+    largerImageView.setFitWidth(800);
+    largerImageView.setPreserveRatio(true);
+    Stage imageStage = new Stage();
+    imageStage.setTitle("View Image");
+    VBox imageBox = new VBox(largerImageView);
+    imageBox.setAlignment(Pos.CENTER);
+    Scene scene = new Scene(imageBox);
+    imageStage.setScene(scene);
+    imageStage.initModality(Modality.APPLICATION_MODAL);
+    imageStage.show();
+}
+
+private void showAlertWithContent(String title, String headerText, VBox content) {
+    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+    alert.setTitle(title);
+    alert.setHeaderText(headerText);
+    alert.getDialogPane().setContent(content);
+    alert.showAndWait();
+}
+
+private void showAlert(String title, String headerText, String contentText) {
+    Alert alert = new Alert(Alert.AlertType.WARNING);
+    alert.setTitle(title);
+    alert.setHeaderText(headerText);
+    alert.setContentText(contentText);
+    alert.showAndWait();
+}
+
+
 }
