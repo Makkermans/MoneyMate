@@ -27,8 +27,7 @@ import javafx.scene.control.CheckBox;
 /**
  * FXML Controller class
  *
- * @author jsoler
- * Modified carferl2
+ * @author jsoler Modified carferl2
  */
 public class HelloController implements Initializable {
 
@@ -52,19 +51,18 @@ public class HelloController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         plainTextField.setManaged(false);
-    plainTextField.setVisible(false);
-    plainTextField.managedProperty().bind(showPasswordCheckBox.selectedProperty());
-    plainTextField.visibleProperty().bind(showPasswordCheckBox.selectedProperty());
+        plainTextField.setVisible(false);
+        plainTextField.managedProperty().bind(showPasswordCheckBox.selectedProperty());
+        plainTextField.visibleProperty().bind(showPasswordCheckBox.selectedProperty());
 
-    passwordField.managedProperty().bind(showPasswordCheckBox.selectedProperty().not());
-    passwordField.visibleProperty().bind(showPasswordCheckBox.selectedProperty().not());
+        passwordField.managedProperty().bind(showPasswordCheckBox.selectedProperty().not());
+        passwordField.visibleProperty().bind(showPasswordCheckBox.selectedProperty().not());
 
-    // Bind the text properties together
-    plainTextField.textProperty().bindBidirectional(passwordField.textProperty());
+        // Bind the text properties together
+        plainTextField.textProperty().bindBidirectional(passwordField.textProperty());
 
-    // Handle checkbox action
-    showPasswordCheckBox.setOnAction(e -> handleCheckboxAction());
-
+        // Handle checkbox action
+        showPasswordCheckBox.setOnAction(e -> handleCheckboxAction());
 
     }
 
@@ -72,7 +70,7 @@ public class HelloController implements Initializable {
     public void registerButtonPressed(MouseEvent event) {
         try {
             // Load the registration view
-            FXMLLoader fxmlloader= new FXMLLoader(getClass().getResource("/view/Register-view.fxml"));
+            FXMLLoader fxmlloader = new FXMLLoader(getClass().getResource("/view/Register-view.fxml"));
             Parent root = fxmlloader.load();
             MoneyMateApplication.setRoot(root);
         } catch (Exception e) {
@@ -81,8 +79,6 @@ public class HelloController implements Initializable {
         }
     }
 
-
-    
     @FXML
     private void loginClicked(ActionEvent event) {
         String username = nameField.getText();
@@ -92,7 +88,7 @@ public class HelloController implements Initializable {
             boolean loginSuccessful = Acount.getInstance().logInUserByCredentials(username, password);
             if (loginSuccessful) {
                 // Load the main application dashboard or home screen
-                FXMLLoader fxmlloader= new FXMLLoader(getClass().getResource("/view/Dashboard-view.fxml"));
+                FXMLLoader fxmlloader = new FXMLLoader(getClass().getResource("/view/Dashboard-view.fxml"));
                 Parent root = fxmlloader.load();
                 MoneyMateApplication.setRoot(root);
             } else {
@@ -109,10 +105,10 @@ public class HelloController implements Initializable {
     @FXML
     private void handleCheckboxAction() {
         if (showPasswordCheckBox.isSelected()) {
-        plainTextField.requestFocus();
-    } else {
-        passwordField.requestFocus();
-    }
+            plainTextField.requestFocus();
+        } else {
+            passwordField.requestFocus();
+        }
     }
 
 }

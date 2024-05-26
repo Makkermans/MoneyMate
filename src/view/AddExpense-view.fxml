@@ -22,7 +22,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="800.0" stylesheets="@../Style/GeneralStyle.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.AddExpenseController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="800.0" stylesheets="@../Style/GeneralStyle.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.AddExpenseController">
    <top>
       <VBox BorderPane.alignment="CENTER">
          <children>
@@ -30,7 +30,7 @@
               <menus>
                 <Menu mnemonicParsing="false" text="Log Out">
                   <items>
-                    <MenuItem mnemonicParsing="false" text="Sign Off" />
+                    <MenuItem fx:id="SignOff" mnemonicParsing="false" onAction="#SignOffClicked" text="Sign Off" />
                   </items>
                 </Menu>
               </menus>
@@ -126,7 +126,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <Label fx:id="errorMessage" maxWidth="1.7976931348623157E308" prefHeight="80.0" prefWidth="185.0" wrapText="true" GridPane.columnIndex="3" GridPane.rowIndex="2" GridPane.rowSpan="2" GridPane.valignment="CENTER">
+            <Label fx:id="errorMessage" maxWidth="1.7976931348623157E308" prefHeight="80.0" prefWidth="185.0" textFill="#ef0000" wrapText="true" GridPane.columnIndex="3" GridPane.rowIndex="2" GridPane.rowSpan="2" GridPane.valignment="CENTER">
                <GridPane.margin>
                   <Insets top="35.0" />
                </GridPane.margin></Label>

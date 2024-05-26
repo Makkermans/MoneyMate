@@ -63,17 +63,20 @@ public class AddExpenseController implements Initializable {
     private String username;
     @FXML
     private ImageView receiptPicture;
-    
+
+    @FXML
     private Button removeCatgory;
+    @FXML
+    private MenuItem SignOff;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         saveButton.disableProperty().bind(
-            expenseTitle.textProperty().isEmpty()
-            .or(expenseAmount.textProperty().isEmpty())
-            .or(expenseUnit.textProperty().isEmpty())
-            .or(datapicker.valueProperty().isNull())
-            .or(chooseCategory.valueProperty().isNull())
+                expenseTitle.textProperty().isEmpty()
+                        .or(expenseAmount.textProperty().isEmpty())
+                        .or(expenseUnit.textProperty().isEmpty())
+                        .or(datapicker.valueProperty().isNull())
+                        .or(chooseCategory.valueProperty().isNull())
         );
 
         try {
@@ -82,7 +85,7 @@ public class AddExpenseController implements Initializable {
                 this.username = currentUser.getNickName();
                 nameAddExpense.setText(this.username); // Set the username in the TextField
                 if (currentUser.getImage() != null) {
-                    circleImage.setFill(new ImagePattern(currentUser.getImage()));  
+                    circleImage.setFill(new ImagePattern(currentUser.getImage()));
                 }
             }
         } catch (AcountDAOException | IOException ex) {
@@ -141,8 +144,8 @@ public class AddExpenseController implements Initializable {
                     System.out.println("Category added successfully.");
                     List<Category> categories = Acount.getInstance().getUserCategories();
                     Optional<Category> newCategory = categories.stream()
-                        .filter(c -> c.getName().equals(name))
-                        .findFirst();
+                            .filter(c -> c.getName().equals(name))
+                            .findFirst();
                     if (newCategory.isPresent()) {
                         chooseCategory.getItems().add(newCategory.get());
                         chooseCategory.setValue(newCategory.get());
@@ -161,7 +164,7 @@ public class AddExpenseController implements Initializable {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select File");
         fileChooser.getExtensionFilters().addAll(
-            new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg", "*.gif"));
+                new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg", "*.gif"));
         File selectedFile = fileChooser.showOpenDialog(null);
         if (selectedFile != null) {
             Image image = new Image(selectedFile.toURI().toString());
@@ -180,21 +183,25 @@ public class AddExpenseController implements Initializable {
             Category category = chooseCategory.getValue();
             Image image = receiptPicture.getImage();
             LocalDate date = datapicker.getValue();   // This could also come from a DatePicker
-            
+
+            // Check if title is only numbers
+            if (title.matches("^\\d+$")) {
+                errorMessage.setText("Invalid title. Title cannot be just numbers, please use a descriptive text.");
+                return;
+            }
             // Validate amount and unit
             if (!isValidNumber(amountStr)) {
                 errorMessage.setText("Invalid cost. Please enter a valid number. Use a '.' instead of ',' for decimal costs");
                 return;
             }
-            if (!isValidNumber(unitStr)) {
-                errorMessage.setText("Invalid unit. Please enter a valid number.");
+            if (!isValidInteger(unitStr)) {
+                errorMessage.setText("Invalid unit. Please enter a valid integer.");
                 return;
             }
 
             double amount = Double.parseDouble(amountStr);
             int unit = Integer.parseInt(unitStr);
 
-            
             boolean saveSuccess = Acount.getInstance().registerCharge(title, description, amount, unit, image, date, category);  // This method needs to be implemented
 
             if (saveSuccess) {
@@ -226,49 +233,48 @@ public class AddExpenseController implements Initializable {
     }
 
     @FXML
-private void removeCategoryPressed(ActionEvent event) {
-    // Get the currently selected category
-    Category selectedCategory = chooseCategory.getValue();
-    if (selectedCategory != null) {
-        // Confirmation dialog
-        Alert confirmationDialog = new Alert(Alert.AlertType.CONFIRMATION);
-        confirmationDialog.setTitle("Confirm Delete");
-        confirmationDialog.setHeaderText("Delete Category and Related Charges");
-        
-        // Set custom text with wrapping
-        String contentText = "Are you sure you want to delete the category '" + selectedCategory.getName() + 
-                             "' and all related charges? This action cannot be undone.";
-        Label label = new Label(contentText);
-        label.setWrapText(true);  // Enable text wrapping within the label
-        label.setMinHeight(Label.USE_PREF_SIZE);  // Ensure the label size is based on content
-        confirmationDialog.getDialogPane().setContent(label);
+    private void removeCategoryPressed(ActionEvent event) {
+        // Get the currently selected category
+        Category selectedCategory = chooseCategory.getValue();
+        if (selectedCategory != null) {
+            // Confirmation dialog
+            Alert confirmationDialog = new Alert(Alert.AlertType.CONFIRMATION);
+            confirmationDialog.setTitle("Confirm Delete");
+            confirmationDialog.setHeaderText("Delete Category and Related Charges");
 
-        // Optionally set the minimum width of the dialog
-        confirmationDialog.getDialogPane().setMinWidth(400);  // Adjust width as needed
+            // Set custom text with wrapping
+            String contentText = "Are you sure you want to delete the category '" + selectedCategory.getName()
+                    + "' and all related charges? This action cannot be undone.";
+            Label label = new Label(contentText);
+            label.setWrapText(true);  // Enable text wrapping within the label
+            label.setMinHeight(Label.USE_PREF_SIZE);  // Ensure the label size is based on content
+            confirmationDialog.getDialogPane().setContent(label);
 
-        Optional<ButtonType> result = confirmationDialog.showAndWait();
-        if (result.isPresent() && result.get() == ButtonType.OK) {
-            try {
-                // Delete the category and all related charges from the database
-                boolean deleteSuccess = Acount.getInstance().removeCategory(selectedCategory);
-                if (deleteSuccess) {
-                    // Remove the category from the ComboBox
-                    chooseCategory.getItems().remove(selectedCategory);
-                    System.out.println("Category and related charges deleted successfully.");
-                } else {
-                    System.out.println("Failed to delete category and charges.");
+            // Optionally set the minimum width of the dialog
+            confirmationDialog.getDialogPane().setMinWidth(400);  // Adjust width as needed
+
+            Optional<ButtonType> result = confirmationDialog.showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                try {
+                    // Delete the category and all related charges from the database
+                    boolean deleteSuccess = Acount.getInstance().removeCategory(selectedCategory);
+                    if (deleteSuccess) {
+                        // Remove the category from the ComboBox
+                        chooseCategory.getItems().remove(selectedCategory);
+                        System.out.println("Category and related charges deleted successfully.");
+                    } else {
+                        System.out.println("Failed to delete category and charges.");
+                    }
+                } catch (Exception e) {
+                    System.out.println("Error deleting category: " + e.getMessage());
+                    errorMessage.setText("Error deleting category. Please try again.");
                 }
-            } catch (Exception e) {
-                System.out.println("Error deleting category: " + e.getMessage());
-                errorMessage.setText("Error deleting category. Please try again.");
             }
+        } else {
+            // No category selected
+            errorMessage.setText("Please select a category to delete.");
         }
-    } else {
-        // No category selected
-        errorMessage.setText("Please select a category to delete.");
     }
-}
-
 
     @FXML
     private void cancelButtonPressed(ActionEvent event) {
@@ -280,7 +286,7 @@ private void removeCategoryPressed(ActionEvent event) {
             e.printStackTrace();
         }
     }
-    
+
     // Helper method to validate if a string is a valid number
     private boolean isValidNumber(String str) {
         try {
@@ -290,7 +296,25 @@ private void removeCategoryPressed(ActionEvent event) {
             return false;
         }
     }
-    
 
+    private boolean isValidInteger(String input) {
+        try {
+            Integer.parseInt(input);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    @FXML
+    private void SignOffClicked(ActionEvent event) {
+        try {
+            FXMLLoader fxmlloader = new FXMLLoader(getClass().getResource("/view/hello-view.fxml"));
+            Parent root = fxmlloader.load();
+            MoneyMateApplication.setRoot(root);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 }

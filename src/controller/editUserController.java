@@ -49,7 +49,7 @@ public class editUserController implements Initializable {
     private TextField nameField, userField, emailField, surnameField;
     @FXML
     private PasswordField passwordField;
-    
+
     @FXML
     private Label wrongEmail, Wrongpassword;
 
@@ -71,43 +71,43 @@ public class editUserController implements Initializable {
     private TextField plainTextField2;
 
     @Override
-public void initialize(URL url, ResourceBundle rb) {
-    try {
-        // Assuming Acount.getInstance().getLoggedUser() correctly fetches the current logged-in user
-        User currentUser = Acount.getInstance().getLoggedUser();
-        if (currentUser != null) {
-            this.username = currentUser.getNickName();
-            // Set all user details into their respective fields
-            nameField.setText(currentUser.getName());
-            surnameField.setText(currentUser.getSurname());
-            userField.setText(this.username); // Set the username in the TextField
-            emailField.setText(currentUser.getEmail());
-            passwordField.setText(currentUser.getPassword());
-            passwordField2.setText(currentUser.getPassword());
-            if (currentUser.getImage() != null) {
-                profilePicture = currentUser.getImage();
-                circleImage.setFill(new ImagePattern(profilePicture));
+    public void initialize(URL url, ResourceBundle rb) {
+        try {
+            // Assuming Acount.getInstance().getLoggedUser() correctly fetches the current logged-in user
+            User currentUser = Acount.getInstance().getLoggedUser();
+            if (currentUser != null) {
+                this.username = currentUser.getNickName();
+                // Set all user details into their respective fields
+                nameField.setText(currentUser.getName());
+                surnameField.setText(currentUser.getSurname());
+                userField.setText(this.username); // Set the username in the TextField
+                emailField.setText(currentUser.getEmail());
+                passwordField.setText(currentUser.getPassword());
+                passwordField2.setText(currentUser.getPassword());
+                if (currentUser.getImage() != null) {
+                    profilePicture = currentUser.getImage();
+                    circleImage.setFill(new ImagePattern(profilePicture));
+                }
+
+                // Make the username field non-editable
+                userField.setEditable(false);
             }
+        } catch (AcountDAOException | IOException ex) {
+            Logger.getLogger(editUserController.class.getName()).log(Level.SEVERE, null, ex);
 
-            // Make the username field non-editable
-            userField.setEditable(false);
         }
-    } catch (AcountDAOException | IOException ex) {
-        Logger.getLogger(editUserController.class.getName()).log(Level.SEVERE, null, ex);
-        
-    }
-    plainTextField.setManaged(false);
-    plainTextField.setVisible(false);
-    plainTextField.managedProperty().bind(showPasswordCheckBox.selectedProperty());
-    plainTextField.visibleProperty().bind(showPasswordCheckBox.selectedProperty());
+        plainTextField.setManaged(false);
+        plainTextField.setVisible(false);
+        plainTextField.managedProperty().bind(showPasswordCheckBox.selectedProperty());
+        plainTextField.visibleProperty().bind(showPasswordCheckBox.selectedProperty());
 
-    passwordField.managedProperty().bind(showPasswordCheckBox.selectedProperty().not());
-    passwordField.visibleProperty().bind(showPasswordCheckBox.selectedProperty().not());
+        passwordField.managedProperty().bind(showPasswordCheckBox.selectedProperty().not());
+        passwordField.visibleProperty().bind(showPasswordCheckBox.selectedProperty().not());
 
-    // Bind the text properties together
-    plainTextField.textProperty().bindBidirectional(passwordField.textProperty());
-    
-    // Second password
+        // Bind the text properties together
+        plainTextField.textProperty().bindBidirectional(passwordField.textProperty());
+
+        // Second password
         plainTextField2.setManaged(false);
         plainTextField2.setVisible(false);
         plainTextField2.managedProperty().bind(showPasswordCheckBox.selectedProperty());
@@ -116,18 +116,15 @@ public void initialize(URL url, ResourceBundle rb) {
         passwordField2.visibleProperty().bind(showPasswordCheckBox.selectedProperty().not());
         plainTextField2.textProperty().bindBidirectional(passwordField2.textProperty());
 
-
-    // Handle checkbox action
-    showPasswordCheckBox.setOnAction(e -> handleCheckboxAction());
-}
-
-    
+        // Handle checkbox action
+        showPasswordCheckBox.setOnAction(e -> handleCheckboxAction());
+    }
 
     @FXML
     private void cancelClicked(ActionEvent event) {
         try {
             // Load the registration view
-            FXMLLoader fxmlloader= new FXMLLoader(getClass().getResource("/view/Dashboard-view.fxml"));
+            FXMLLoader fxmlloader = new FXMLLoader(getClass().getResource("/view/Dashboard-view.fxml"));
             Parent root = fxmlloader.load();
             MoneyMateApplication.setRoot(root);
         } catch (Exception e) {
@@ -135,123 +132,117 @@ public void initialize(URL url, ResourceBundle rb) {
             // Consider displaying an error message to the user or logging the error more formally.
         }
     }
-    
+
     @FXML
-private void applyClicked(ActionEvent event) {
-    try {
-        // Prepare new data
-        String name = nameField.getText();
-        String surname = surnameField.getText();
-        String password = passwordField.getText();
-        String email = emailField.getText();
-        Image image = (profilePicture != null) ? profilePicture : new Image("/Pictures/default.jpg");
+    private void applyClicked(ActionEvent event) {
+        try {
+            // Prepare new data
+            String name = nameField.getText();
+            String surname = surnameField.getText();
+            String password = passwordField.getText();
+            String email = emailField.getText();
+            Image image = (profilePicture != null) ? profilePicture : new Image("/Pictures/default.jpg");
 
-        // Validate data
-        if (!validateData(password, email)) {
-            System.out.println("Invalid input. Please check your data and try again.");
-            return;
-        }
-
-        // Get current user
-        User currentUser = Acount.getInstance().getLoggedUser();
-        if (currentUser != null) {
-            // Store old data for comparison
-            String oldName = currentUser.getName();
-            String oldSurname = currentUser.getSurname();
-            String oldEmail = currentUser.getEmail();
-            String oldPassword = currentUser.getPassword();
-            Image oldImage = currentUser.getImage();
-
-            // Confirmation Dialog
-            boolean confirm = showConfirmationDialog(oldName, oldSurname, oldEmail, oldPassword, oldImage, name, surname, email, password, image);
-            if (confirm) {
-                // Update user details if confirmed
-                currentUser.setName(name);
-                currentUser.setSurname(surname);
-                currentUser.setEmail(email);
-                currentUser.setPassword(password);
-                currentUser.setImage(image);
-                navigateToLoginScreen();
-            } else {
-                System.out.println("Update canceled by user.");
+            // Validate data
+            if (!validateData(password, email)) {
+                System.out.println("Invalid input. Please check your data and try again.");
+                return;
             }
-        } else {
-            System.out.println("No user is currently logged in.");
+
+            // Get current user
+            User currentUser = Acount.getInstance().getLoggedUser();
+            if (currentUser != null) {
+                // Store old data for comparison
+                String oldName = currentUser.getName();
+                String oldSurname = currentUser.getSurname();
+                String oldEmail = currentUser.getEmail();
+                String oldPassword = currentUser.getPassword();
+                Image oldImage = currentUser.getImage();
+
+                // Confirmation Dialog
+                boolean confirm = showConfirmationDialog(oldName, oldSurname, oldEmail, oldPassword, oldImage, name, surname, email, password, image);
+                if (confirm) {
+                    // Update user details if confirmed
+                    currentUser.setName(name);
+                    currentUser.setSurname(surname);
+                    currentUser.setEmail(email);
+                    currentUser.setPassword(password);
+                    currentUser.setImage(image);
+                    navigateToLoginScreen();
+                } else {
+                    System.out.println("Update canceled by user.");
+                }
+            } else {
+                System.out.println("No user is currently logged in.");
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            System.out.println("An error occurred. Please try again later.");
         }
-    } catch (Exception ex) {
-        ex.printStackTrace();
-        System.out.println("An error occurred. Please try again later.");
-    }
-}
-
-private boolean showConfirmationDialog(String oldName, String oldSurname, String oldEmail, String oldPassword, Image oldImage, String newName, String newSurname, String newEmail, String newPassword, Image newImage) {
-    // Create an Alert or a custom Dialog to show changes and ask for user confirmation
-    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-    alert.setTitle("Confirm Changes");
-    alert.setHeaderText("Please confirm your changes");
-
-    // Construct the message showing old vs new data
-    String contentText = "Please review your changes:\n\n" +
-                         "Name: " + oldName + " -> " + newName + "\n" +
-                         "Surname: " + oldSurname + " -> " + newSurname + "\n" +
-                         "Email: " + oldEmail + " -> " + newEmail + "\n" +
-                         "Password: [PROTECTED]" + "\n\n" +
-                         "Click OK to confirm or Cancel to revert changes.";
-    alert.setContentText(contentText);
-
-    // Show dialog and wait for response
-    Optional<ButtonType> result = alert.showAndWait();
-    return result.isPresent() && result.get() == ButtonType.OK;
-}
-
-
-
-
-private void navigateToLoginScreen() {
-    try {
-        FXMLLoader fxmlloader = new FXMLLoader(getClass().getResource("/view/Dashboard-view.fxml"));
-        Parent root = fxmlloader.load();
-        MoneyMateApplication.setRoot(root);
-    } catch (Exception e) {
-        e.printStackTrace(); // Log the exception for debugging purposes.
-        // Consider displaying an error message to the user or logging the error more formally.
-    }
-}
-
-
-private boolean validateData(String password, String email) {
-    boolean isValid = true;
-    // Validate password length
-    if (!User.checkPassword(password)) {
-        String errorPassword = "Password needs at least: \n"+
-                              "8-20 characters, 1 special character,\n"+
-                              "1 uppercase, 1 lowercase, and 1 number.";
-        Wrongpassword.setText(errorPassword);  
-        isValid = false;
-    }else if (!password.equals(passwordField2.getText())) { // Check if passwords match
-        Wrongpassword.setText("Passwords do not match.");
-        isValid = false;
-    }
-    else {
-        Wrongpassword.setText("");
     }
 
-    // Validate email format
-    if (!User.checkEmail(email)) {
-        wrongEmail.setText("Enter a valid email address.");
-        isValid = false;
-    }
-    else {
-        wrongEmail.setText("");
+    private boolean showConfirmationDialog(String oldName, String oldSurname, String oldEmail, String oldPassword, Image oldImage, String newName, String newSurname, String newEmail, String newPassword, Image newImage) {
+        // Create an Alert or a custom Dialog to show changes and ask for user confirmation
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirm Changes");
+        alert.setHeaderText("Please confirm your changes");
+
+        // Construct the message showing old vs new data
+        String contentText = "Please review your changes:\n\n"
+                + "Name: " + oldName + " -> " + newName + "\n"
+                + "Surname: " + oldSurname + " -> " + newSurname + "\n"
+                + "Email: " + oldEmail + " -> " + newEmail + "\n"
+                + "Password: [PROTECTED]" + "\n\n"
+                + "Click OK to confirm or Cancel to revert changes.";
+        alert.setContentText(contentText);
+
+        // Show dialog and wait for response
+        Optional<ButtonType> result = alert.showAndWait();
+        return result.isPresent() && result.get() == ButtonType.OK;
     }
 
-    return isValid;
-}
+    private void navigateToLoginScreen() {
+        try {
+            FXMLLoader fxmlloader = new FXMLLoader(getClass().getResource("/view/Dashboard-view.fxml"));
+            Parent root = fxmlloader.load();
+            MoneyMateApplication.setRoot(root);
+        } catch (Exception e) {
+            e.printStackTrace(); // Log the exception for debugging purposes.
+            // Consider displaying an error message to the user or logging the error more formally.
+        }
+    }
+
+    private boolean validateData(String password, String email) {
+        boolean isValid = true;
+        // Validate password length
+        if (!User.checkPassword(password)) {
+            String errorPassword = "Password needs at least: \n"
+                    + "8-20 characters, 1 special character,\n"
+                    + "1 uppercase, 1 lowercase, and 1 number.";
+            Wrongpassword.setText(errorPassword);
+            isValid = false;
+        } else if (!password.equals(passwordField2.getText())) { // Check if passwords match
+            Wrongpassword.setText("Passwords do not match.");
+            isValid = false;
+        } else {
+            Wrongpassword.setText("");
+        }
+
+        // Validate email format
+        if (!User.checkEmail(email)) {
+            wrongEmail.setText("Enter a valid email address.");
+            isValid = false;
+        } else {
+            wrongEmail.setText("");
+        }
+
+        return isValid;
+    }
 
     @FXML
     private void editPictureClicked(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
-        
+
         // Set filter to only allow images
         FileChooser.ExtensionFilter imageFilter = new FileChooser.ExtensionFilter("Image Files", "*.jpg", "*.png");
         fileChooser.getExtensionFilters().add(imageFilter);
@@ -273,33 +264,33 @@ private boolean validateData(String password, String email) {
                 profilePicture = new Image(imagePath);
                 circleImage.setFill(new ImagePattern(profilePicture)); // Set the image in ImageView
             } catch (MalformedURLException ex) {
-                System.err.println("Error loading image: "+ ex.getMessage());
+                System.err.println("Error loading image: " + ex.getMessage());
                 // Handle exceptions possibly with a dialog
             }
         }
     }
 
     @FXML
-    private void logoutClicked(ActionEvent event) throws Exception{
+    private void logoutClicked(ActionEvent event) throws Exception {
         try {
-        FXMLLoader fxmlloader = new FXMLLoader(getClass().getResource("/view/hello-view.fxml"));
-        Parent root = fxmlloader.load();
-        MoneyMateApplication.setRoot(root);
-    } catch (Exception e) {
-        e.printStackTrace(); // Log the exception for debugging purposes.
-        // Consider displaying an error message to the user or logging the error more formally.
-    }
+            FXMLLoader fxmlloader = new FXMLLoader(getClass().getResource("/view/hello-view.fxml"));
+            Parent root = fxmlloader.load();
+            MoneyMateApplication.setRoot(root);
+        } catch (Exception e) {
+            e.printStackTrace(); // Log the exception for debugging purposes.
+            // Consider displaying an error message to the user or logging the error more formally.
+        }
     }
 
     @FXML
     private void handleCheckboxAction() {
         if (showPasswordCheckBox.isSelected()) {
-        plainTextField.requestFocus();
-        plainTextField2.requestFocus();
-    } else {
-        passwordField.requestFocus();
-        passwordField2.requestFocus();
+            plainTextField.requestFocus();
+            plainTextField2.requestFocus();
+        } else {
+            passwordField.requestFocus();
+            passwordField2.requestFocus();
+        }
     }
-    }
-    
+
 }

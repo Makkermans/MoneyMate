@@ -70,13 +70,13 @@ public class DashboardController implements Initializable {
     private Label nameDashboard;
 
     private String username;
-    
+
     private ObservableList<Charge> chargeData = FXCollections.observableArrayList();
     @FXML
     private Circle circleImage;
     @FXML
     private ComboBox<String> selectFilter;
-    
+
     private ObservableList<String> filterList;
     @FXML
     private Button deleteExpense;
@@ -85,12 +85,12 @@ public class DashboardController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         filterList = selectFilter.getItems();
         filterList.addAll("Category", "Monthly", "Year-by-Year");
-        
+
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         dateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
         categoryColumn.setCellValueFactory(new PropertyValueFactory<>("category"));
         categoryColumn.setCellFactory(column -> new TableCell<Charge, Category>() {
-            
+
             @Override
             protected void updateItem(Category item, boolean empty) {
                 super.updateItem(item, empty);
@@ -103,18 +103,18 @@ public class DashboardController implements Initializable {
         });
         amountColumn.setCellValueFactory(new PropertyValueFactory<>("cost"));
         amountColumn.setCellFactory(column -> new TableCell<Charge, Double>() {
-        @Override
-        protected void updateItem(Double item, boolean empty) {
-            super.updateItem(item, empty);
-            if (empty || item == null) {
-                setText(null);
-            } else {
-                Charge charge = getTableView().getItems().get(getIndex());
-                double totalCost = charge.getCost() * charge.getUnits();
-                setText(String.format("€%.2f", totalCost));
+            @Override
+            protected void updateItem(Double item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                } else {
+                    Charge charge = getTableView().getItems().get(getIndex());
+                    double totalCost = charge.getCost() * charge.getUnits();
+                    setText(String.format("€%.2f", totalCost));
+                }
             }
-        }
-    });
+        });
 
         try {
             User currentUser = Acount.getInstance().getLoggedUser();
@@ -126,12 +126,12 @@ public class DashboardController implements Initializable {
                 }
                 loadData();
                 setupChart("Category");
-                updateMonthlyExpenses(); 
+                updateMonthlyExpenses();
             }
         } catch (AcountDAOException | IOException ex) {
-            Logger.getLogger(editUserController.class.getName()).log(Level.SEVERE, null, ex); 
+            Logger.getLogger(editUserController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         selectFilter.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             setupChart(newValue);
         });
@@ -140,14 +140,14 @@ public class DashboardController implements Initializable {
 
         NumberAxis yAxis = (NumberAxis) expenseChart.getYAxis();
         yAxis.setLabel("Amount");
-    }    
+    }
 
     private void updateMonthlyExpenses() {
         LocalDate now = LocalDate.now();
         double total = chargeData.stream()
-            .filter(charge -> charge.getDate().getMonth() == now.getMonth() && charge.getDate().getYear() == now.getYear())
-            .mapToDouble(charge -> charge.getCost() * charge.getUnits())
-            .sum();
+                .filter(charge -> charge.getDate().getMonth() == now.getMonth() && charge.getDate().getYear() == now.getYear())
+                .mapToDouble(charge -> charge.getCost() * charge.getUnits())
+                .sum();
         monthlyExpense.setText(String.format("€%.2f", total));
     }
 
@@ -183,9 +183,9 @@ public class DashboardController implements Initializable {
     private void setupCategoryChart() {
         XYChart.Series<String, Number> series = new XYChart.Series<>();
         Map<String, Double> summary = chargeData.stream()
-            .collect(Collectors.groupingBy(
-                charge -> charge.getCategory().getName(),  // Assuming getCategory().getName() is correct
-                Collectors.summingDouble(Charge::getCost)));
+                .collect(Collectors.groupingBy(
+                        charge -> charge.getCategory().getName(),
+                        Collectors.summingDouble(charge -> charge.getCost() * charge.getUnits())));
 
         summary.forEach((categoryName, sum) -> series.getData().add(new XYChart.Data<>(categoryName, sum)));
 
@@ -193,15 +193,13 @@ public class DashboardController implements Initializable {
         expenseChart.getData().add(series);
     }
 
-
-
     private void setupMonthlyChart() {
         XYChart.Series<String, Number> series = new XYChart.Series<>();
         Map<Month, Double> summary = chargeData.stream()
-            .collect(Collectors.groupingBy(
-                charge -> charge.getDate().getMonth(),
-                TreeMap::new,
-                Collectors.summingDouble(Charge::getCost)));
+                .collect(Collectors.groupingBy(
+                        charge -> charge.getDate().getMonth(),
+                        TreeMap::new,
+                        Collectors.summingDouble(charge -> charge.getCost() * charge.getUnits())));
 
         summary.forEach((month, sum) -> series.getData().add(new XYChart.Data<>(month.toString(), sum)));
 
@@ -217,18 +215,18 @@ public class DashboardController implements Initializable {
         int previousYear = currentYear - 1;
 
         Map<Month, Double> lastYearSummary = chargeData.stream()
-            .filter(charge -> charge.getDate().getYear() == previousYear)
-            .collect(Collectors.groupingBy(
-                charge -> charge.getDate().getMonth(),
-                TreeMap::new,
-                Collectors.summingDouble(Charge::getCost)));
+                .filter(charge -> charge.getDate().getYear() == previousYear)
+                .collect(Collectors.groupingBy(
+                        charge -> charge.getDate().getMonth(),
+                        TreeMap::new,
+                        Collectors.summingDouble(charge -> charge.getCost() * charge.getUnits())));
 
         Map<Month, Double> thisYearSummary = chargeData.stream()
-            .filter(charge -> charge.getDate().getYear() == currentYear)
-            .collect(Collectors.groupingBy(
-                charge -> charge.getDate().getMonth(),
-                TreeMap::new,
-                Collectors.summingDouble(Charge::getCost)));
+                .filter(charge -> charge.getDate().getYear() == currentYear)
+                .collect(Collectors.groupingBy(
+                        charge -> charge.getDate().getMonth(),
+                        TreeMap::new,
+                        Collectors.summingDouble(charge -> charge.getCost() * charge.getUnits())));
 
         lastYearSummary.forEach((month, sum) -> seriesLastYear.getData().add(new XYChart.Data<>(month.toString(), sum)));
         thisYearSummary.forEach((month, sum) -> seriesThisYear.getData().add(new XYChart.Data<>(month.toString(), sum)));
@@ -263,7 +261,7 @@ public class DashboardController implements Initializable {
 
     @FXML
     private void addExpenseClicked(ActionEvent event) {
-        
+
         try {
             FXMLLoader fxmlloader = new FXMLLoader(getClass().getResource("/view/AddExpense-view.fxml"));
             Parent root = fxmlloader.load();
@@ -291,12 +289,12 @@ public class DashboardController implements Initializable {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("Delete Confirmation");
             alert.setHeaderText("Are you sure you want to delete this charge?");
-            alert.setContentText("Name: " + selectedCharge.getName() + "\nAmount: " + selectedCharge.getCost() + "\nCategory: " + selectedCharge.getCategory().getName()  + "\nDate: " + selectedCharge.getDate());
+            alert.setContentText("Name: " + selectedCharge.getName() + "\nAmount: " + selectedCharge.getCost() + "\nCategory: " + selectedCharge.getCategory().getName() + "\nDate: " + selectedCharge.getDate());
 
             if (alert.showAndWait().get() == ButtonType.OK) {
                 chargeData.remove(selectedCharge);
                 try {
-                    Acount.getInstance().removeCharge(selectedCharge); 
+                    Acount.getInstance().removeCharge(selectedCharge);
                 } catch (AcountDAOException e) {
                     showErrorMessage("Failed to delete the charge: " + e.getMessage());
                 }
@@ -308,9 +306,10 @@ public class DashboardController implements Initializable {
             alert.setContentText("Please select a charge in the table.");
             alert.showAndWait();
         }
-    
+
     }
-     private void showErrorMessage(String message) {
+
+    private void showErrorMessage(String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");
         alert.setHeaderText(null);
