@@ -24,7 +24,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="600.0" prefWidth="800.0" stylesheets="@../Style/GeneralStyle.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.OverviewExpenseController">
+<AnchorPane prefHeight="650.0" prefWidth="800.0" stylesheets="@../Style/GeneralStyle.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.OverviewExpenseController">
    <children>
       <BorderPane layoutX="315.0" layoutY="146.0" prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <top>
@@ -56,7 +56,7 @@
                                     <Font size="50.0" />
                                  </font>
                                  <GridPane.margin>
-                                    <Insets left="20.0" top="20.0" />
+                                    <Insets left="20.0" top="10.0" />
                                  </GridPane.margin>
                               </Text>
                               <Label fx:id="username" text="Big D" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
@@ -64,23 +64,23 @@
                                     <Font name="System Bold" size="18.0" />
                                  </font>
                                  <GridPane.margin>
-                                    <Insets right="40.0" />
+                                    <Insets right="35.0" />
                                  </GridPane.margin>
                               </Label>
-                              <Circle fx:id="circle" fill="DODGERBLUE" radius="37.0" stroke="BLACK" strokeType="INSIDE" GridPane.columnIndex="1" GridPane.halignment="RIGHT">
+                              <Circle fx:id="circle" fill="DODGERBLUE" radius="37.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="4.0" GridPane.columnIndex="1" GridPane.halignment="RIGHT">
                                  <GridPane.margin>
-                                    <Insets right="25.0" top="5.0" />
+                                    <Insets right="20.0" top="5.0" />
                                  </GridPane.margin>
                               </Circle>
-                              <ImageView fx:id="userChange" fitHeight="26.0" fitWidth="52.0" onMouseClicked="#userChangeClicked" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.valignment="BOTTOM">
+                              <ImageView fx:id="userChange" fitHeight="42.0" fitWidth="34.0" onMouseClicked="#userChangeClicked" pickOnBounds="true" preserveRatio="true" rotate="270.0" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.valignment="BOTTOM">
                                  <image>
-                                    <Image url="@../../../Pictures/Edit_Pencil.png" />
+                                    <Image url="@../Pictures/Edit_Pencil.png" />
                                  </image>
                                  <GridPane.margin>
-                                    <Insets left="60.0" right="20.0" />
+                                    <Insets left="10.0" right="80.0" />
                                  </GridPane.margin>
                                  <effect>
-                                    <ColorAdjust brightness="-1.0" contrast="1.0" hue="-1.0" saturation="1.0" />
+                                    <ColorAdjust brightness="-1.0" contrast="-1.0" hue="1.0" saturation="1.0" />
                                  </effect>
                                  <cursor>
                                     <Cursor fx:constant="HAND" />
