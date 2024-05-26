@@ -24,7 +24,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="650.0" prefWidth="800.0" stylesheets="@../Style/GeneralStyle.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.OverviewExpenseController">
+<AnchorPane prefHeight="650.0" prefWidth="800.0" stylesheets="@../Style/GeneralStyle.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.OverviewExpenseController">
    <children>
       <BorderPane layoutX="315.0" layoutY="146.0" prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <top>
@@ -175,9 +175,9 @@
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </Button>
-                  <Button fx:id="returnButton" mnemonicParsing="false" onAction="#returnButtonClikced" text="Return">
+                  <Button fx:id="returnButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#returnButtonClikced" text="Return">
                      <VBox.margin>
-                        <Insets top="100.0" />
+                        <Insets right="10.0" top="100.0" />
                      </VBox.margin>
                      <cursor>
                         <Cursor fx:constant="HAND" />
