@@ -17,3 +17,15 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
     justify-content: center;
 }
 
+.username {
+    -fx-font-family: "Comic Sans MS";
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+}
+
+.title {
+    -fx-font-family: "Comic Sans MS";
+    -fx-font-size: 50px;
+    -fx-fill: darkgreen;
+}
+
