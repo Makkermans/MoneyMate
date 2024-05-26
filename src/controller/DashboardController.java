@@ -55,7 +55,7 @@ public class DashboardController implements Initializable {
     @FXML
     private TableColumn<Charge, LocalDate> dateColumn;
     @FXML
-    private TableColumn<Charge, Category> categoryColumn; // Ensure this is Category type
+    private TableColumn<Charge, Category> categoryColumn;
     @FXML
     private TableColumn<Charge, Double> amountColumn;
     @FXML
@@ -81,6 +81,13 @@ public class DashboardController implements Initializable {
     @FXML
     private Button deleteExpense;
 
+    /**
+     * FXML Controller class Controller class for the login interface in the
+     * MoneyMateApplication. Handles user authentication and navigation to the
+     * registration view.
+     *
+     * @author Dante De Meyer & Thomas Vanderstraeten
+     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         filterList = selectFilter.getItems();
@@ -97,7 +104,7 @@ public class DashboardController implements Initializable {
                 if (empty || item == null) {
                     setText(null);
                 } else {
-                    setText(item.getName()); // Ensure 'getName' is the correct method to get the category name from a Category object
+                    setText(item.getName());
                 }
             }
         });
@@ -176,7 +183,6 @@ public class DashboardController implements Initializable {
             setupYearByYearChart();
         }
 
-        // Ensure the x-axis is properly updated
         expenseChart.layout();
     }
 

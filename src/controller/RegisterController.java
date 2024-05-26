@@ -39,7 +39,7 @@ import model.AcountDAOException;
 /**
  * FXML Controller class
  *
- * @author jsoler Modified carferl2
+ * @author Dante De Meyer & Thomas Vanderstraeten
  */
 public class RegisterController implements Initializable {
 
@@ -136,7 +136,6 @@ public class RegisterController implements Initializable {
             MoneyMateApplication.setRoot(root);
         } catch (Exception e) {
             e.printStackTrace(); // Log the exception for debugging purposes.
-            // Consider displaying an error message to the user or logging the error more formally.
         }
 
     }
@@ -144,13 +143,11 @@ public class RegisterController implements Initializable {
     @FXML
     private void applyClicked(ActionEvent event) {
         try {
-            // Example of collecting data from input fields
             String name = nameField.getText();
             String surname = surnameField.getText();
             String username = userField.getText();
             String password = passwordField.getText();
             String email = emailField.getText();
-            //Image profilepic = profilePicture.getImage();
 
             // Validate data
             if (!validateData(username, password, email)) {
@@ -190,7 +187,6 @@ public class RegisterController implements Initializable {
             MoneyMateApplication.setRoot(root);
         } catch (Exception e) {
             e.printStackTrace(); // Log the exception for debugging purposes.
-            // Consider displaying an error message to the user or logging the error more formally.
         }
     }
 

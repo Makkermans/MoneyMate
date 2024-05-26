@@ -39,7 +39,7 @@ import model.User;
 /**
  * FXML Controller class
  *
- * @author thoma
+ * @authors Dante De Meyer & Thomas Vanderstraeten
  */
 public class editUserController implements Initializable {
 
@@ -53,7 +53,7 @@ public class editUserController implements Initializable {
     @FXML
     private Label wrongEmail, Wrongpassword;
 
-    private String username; // Declare username as a class member
+    private String username; 
     @FXML
     private Button editPictureButton;
     @FXML
@@ -73,14 +73,13 @@ public class editUserController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         try {
-            // Assuming Acount.getInstance().getLoggedUser() correctly fetches the current logged-in user
             User currentUser = Acount.getInstance().getLoggedUser();
             if (currentUser != null) {
                 this.username = currentUser.getNickName();
                 // Set all user details into their respective fields
                 nameField.setText(currentUser.getName());
                 surnameField.setText(currentUser.getSurname());
-                userField.setText(this.username); // Set the username in the TextField
+                userField.setText(this.username); 
                 emailField.setText(currentUser.getEmail());
                 passwordField.setText(currentUser.getPassword());
                 passwordField2.setText(currentUser.getPassword());

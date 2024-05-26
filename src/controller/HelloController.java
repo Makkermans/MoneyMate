@@ -26,8 +26,10 @@ import javafx.scene.control.CheckBox;
 
 /**
  * FXML Controller class
- *
- * @author jsoler Modified carferl2
+ * Controller class for the login interface in the MoneyMateApplication.
+ * Handles user authentication and navigation to the registration view.
+ * 
+ * @author Dante De Meyer & Thomas Vanderstraeten
  */
 public class HelloController implements Initializable {
 

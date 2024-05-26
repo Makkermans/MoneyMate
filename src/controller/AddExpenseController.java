@@ -32,6 +32,13 @@ import model.Category;
 import model.Charge;
 import model.User;
 
+/**
+ * FXML Controller class Controller class for the login interface in the
+ * MoneyMateApplication. Handles user authentication and navigation to the
+ * registration view.
+ *
+ * @author Dante De Meyer & Thomas Vanderstraeten
+ */
 public class AddExpenseController implements Initializable {
 
     @FXML
@@ -83,7 +90,7 @@ public class AddExpenseController implements Initializable {
             User currentUser = Acount.getInstance().getLoggedUser();
             if (currentUser != null) {
                 this.username = currentUser.getNickName();
-                nameAddExpense.setText(this.username); // Set the username in the TextField
+                nameAddExpense.setText(this.username);
                 if (currentUser.getImage() != null) {
                     circleImage.setFill(new ImagePattern(currentUser.getImage()));
                 }
@@ -93,7 +100,6 @@ public class AddExpenseController implements Initializable {
             errorMessage.setText("Failed to load user details.");
         }
 
-        // Setting up the ComboBox with a cell factory
         chooseCategory.setCellFactory(lv -> new ListCell<Category>() {
             @Override
             protected void updateItem(Category item, boolean empty) {
@@ -178,11 +184,10 @@ public class AddExpenseController implements Initializable {
             String title = expenseTitle.getText();
             String amountStr = expenseAmount.getText();
             String unitStr = expenseUnit.getText();
-            //double amount = Double.parseDouble(expenseAmount.getText());
             String description = expenseDescription.getText();
             Category category = chooseCategory.getValue();
             Image image = receiptPicture.getImage();
-            LocalDate date = datapicker.getValue();   // This could also come from a DatePicker
+            LocalDate date = datapicker.getValue();
 
             // Check if title is only numbers
             if (title.matches("^\\d+$")) {
@@ -287,7 +292,6 @@ public class AddExpenseController implements Initializable {
         }
     }
 
-    // Helper method to validate if a string is a valid number
     private boolean isValidNumber(String str) {
         try {
             Double.parseDouble(str);

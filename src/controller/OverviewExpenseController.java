@@ -62,7 +62,7 @@ import org.apache.pdfbox.pdmodel.font.Standard14Fonts;
 /**
  * FXML Controller class
  *
- * @author thoma
+ * @author Dante De Meyer & Thomas Vanderstraeten
  */
 public class OverviewExpenseController implements Initializable {
 
@@ -129,7 +129,7 @@ public class OverviewExpenseController implements Initializable {
             User currentUser = Acount.getInstance().getLoggedUser();
             if (currentUser != null) {
                 this.nickname = currentUser.getNickName();
-                username.setText(this.nickname); // Set the username in the TextField
+                username.setText(this.nickname); 
                 if (currentUser.getImage() != null) {
 
                     circle.setFill(new ImagePattern(currentUser.getImage()));
@@ -155,7 +155,7 @@ public class OverviewExpenseController implements Initializable {
             }
             expenseTable.setItems(chargeData);
         } catch (AcountDAOException e) {
-            e.printStackTrace(); // Log the exception
+            e.printStackTrace();
 
         }
     }
@@ -459,7 +459,7 @@ public class OverviewExpenseController implements Initializable {
             Parent root = fxmlloader.load();
             MoneyMateApplication.setRoot(root);
         } catch (Exception e) {
-            e.printStackTrace(); // Log the exception for debugging purposes.
+            e.printStackTrace(); 
 
         }
     }
